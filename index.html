@@ -6,10 +6,10 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Vocal Pro">
-    <meta name="description" content="Professional Hindi vocal analyzer for beginner singers - Real-time dB level, waveform & pitch analysis">
+    <meta name="description" content="Professional Hindi vocal analyzer with real-time Swara, Pitch & dB analysis for singers">
     <title>🎤 Vocal Pro - Hindi Singer Analyzer</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Noto+Sans+Devanagari:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Noto+Sans+Devanagari:wght@400;600;700;800&display=swap" rel="stylesheet">
     <style>
         *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -17,7 +17,7 @@
             --bg-primary: #0a0a1a;
             --bg-secondary: #111128;
             --bg-card: rgba(255,255,255,0.04);
-            --bg-card-hover: rgba(255,255,255,0.07);
+            --bg-card-hover: rgba(255,255,255,0.08);
             --accent-primary: #6c5ce7;
             --accent-secondary: #a29bfe;
             --accent-glow: rgba(108,92,231,0.35);
@@ -29,23 +29,20 @@
             --red-glow: rgba(255,82,82,0.3);
             --cyan: #18ffff;
             --text-primary: #f0f0ff;
-            --text-secondary: rgba(240,240,255,0.55);
-            --text-muted: rgba(240,240,255,0.3);
-            --border: rgba(255,255,255,0.06);
+            --text-secondary: rgba(240,240,255,0.6);
+            --text-muted: rgba(240,240,255,0.35);
+            --border: rgba(255,255,255,0.08);
             --safe-top: env(safe-area-inset-top, 20px);
             --safe-bottom: env(safe-area-inset-bottom, 20px);
         }
 
         html, body {
             height: 100%;
-            overflow: hidden;
             background: var(--bg-primary);
             color: var(--text-primary);
             font-family: 'Outfit', 'Noto Sans Devanagari', sans-serif;
             -webkit-font-smoothing: antialiased;
             -webkit-tap-highlight-color: transparent;
-            user-select: none;
-            -webkit-user-select: none;
         }
 
         body::before {
@@ -55,9 +52,9 @@
             left: -50%;
             width: 200%;
             height: 200%;
-            background: radial-gradient(ellipse at 30% 20%, rgba(108,92,231,0.08) 0%, transparent 50%),
-                        radial-gradient(ellipse at 70% 80%, rgba(0,230,118,0.05) 0%, transparent 50%),
-                        radial-gradient(ellipse at 50% 50%, rgba(24,255,255,0.03) 0%, transparent 60%);
+            background: radial-gradient(ellipse at 30% 20%, rgba(108,92,231,0.09) 0%, transparent 50%),
+                        radial-gradient(ellipse at 70% 80%, rgba(0,230,118,0.06) 0%, transparent 50%),
+                        radial-gradient(ellipse at 50% 50%, rgba(24,255,255,0.04) 0%, transparent 60%);
             animation: bgShift 20s ease-in-out infinite alternate;
             pointer-events: none;
             z-index: 0;
@@ -71,25 +68,21 @@
         .app-container {
             position: relative;
             z-index: 1;
-            height: 100%;
+            min-height: 100%;
+            max-width: 580px;
+            margin: 0 auto;
             display: flex;
             flex-direction: column;
-            padding: calc(var(--safe-top) + 8px) 16px calc(var(--safe-bottom) + 8px);
-            overflow-y: auto;
-            overflow-x: hidden;
-            -webkit-overflow-scrolling: touch;
+            padding: calc(var(--safe-top) + 10px) 16px calc(var(--safe-bottom) + 16px);
+            gap: 14px;
         }
 
         /* ─── HEADER ─── */
-        .header {
-            text-align: center;
-            padding: 8px 0 12px;
-            flex-shrink: 0;
-        }
+        .header { text-align: center; }
         .header .logo {
-            font-size: 14px;
+            font-size: 12px;
             font-weight: 700;
-            letter-spacing: 4px;
+            letter-spacing: 3px;
             text-transform: uppercase;
             color: var(--accent-secondary);
             display: flex;
@@ -105,131 +98,271 @@
         }
         .header .logo::after { background: linear-gradient(90deg, var(--accent-secondary), transparent); }
         .header h1 {
-            font-size: 30px;
+            font-size: 28px;
             font-weight: 800;
             background: linear-gradient(135deg, #fff 0%, var(--accent-secondary) 50%, var(--cyan) 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin-top: 4px;
-            line-height: 1.2;
+            margin-top: 2px;
         }
         .header .subtitle {
             color: var(--text-secondary);
-            font-size: 15px;
-            margin-top: 4px;
-            font-weight: 400;
+            font-size: 14px;
+            margin-top: 2px;
         }
 
-        /* ─── MAIN BUTTON ─── */
-        .mic-section {
+        /* ─── TANPURA & ROOT SCALE CONTROLS ─── */
+        .riyaz-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 8px 12px;
+            backdrop-filter: blur(12px);
+        }
+        .scale-selector {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            color: var(--text-secondary);
+            font-weight: 600;
+        }
+        .scale-select {
+            background: rgba(255,255,255,0.08);
+            color: #fff;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 6px 10px;
+            font-family: inherit;
+            font-size: 13px;
+            font-weight: 700;
+            outline: none;
+            cursor: pointer;
+        }
+        .scale-select option { background: var(--bg-secondary); color: #fff; }
+        .tanpura-btn {
+            background: rgba(108,92,231,0.15);
+            border: 1px solid rgba(108,92,231,0.3);
+            color: var(--accent-secondary);
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s;
+        }
+        .tanpura-btn.active {
+            background: linear-gradient(135deg, var(--accent-primary), #8b5cf6);
+            color: #fff;
+            box-shadow: 0 0 15px var(--accent-glow);
+        }
+
+        /* ─── VISUALIZER WRAPPER ─── */
+        .viz-box {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            backdrop-filter: blur(10px);
+        }
+        .viz-controls {
             display: flex;
             justify-content: center;
-            padding: 14px 0;
-            flex-shrink: 0;
+            gap: 6px;
+        }
+        .viz-pill {
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--text-muted);
+            font-family: inherit;
+            font-size: 12px;
+            font-weight: 600;
+            padding: 4px 10px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .viz-pill.active {
+            background: rgba(255,255,255,0.12);
+            color: #fff;
+            border-color: rgba(255,255,255,0.3);
+        }
+        .wave-strip {
+            width: 100%;
+            height: 85px;
+            position: relative;
+            border-radius: 10px;
+            overflow: hidden;
+            background: rgba(0,0,0,0.25);
+        }
+        .wave-strip canvas { width: 100%; height: 100%; display: block; }
+
+        /* ─── MIC BUTTON ─── */
+        .mic-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 4px 0;
         }
         .mic-btn {
             position: relative;
-            width: 80px;
-            height: 80px;
+            width: 78px;
+            height: 78px;
             border-radius: 50%;
             border: none;
             cursor: pointer;
             background: linear-gradient(135deg, var(--accent-primary), #8b5cf6);
             color: #fff;
-            font-size: 32px;
+            font-size: 30px;
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 4px 30px var(--accent-glow), inset 0 1px 0 rgba(255,255,255,0.15);
-            transition: all 0.4s cubic-bezier(0.2,0.8,0.2,1);
-            z-index: 2;
+            box-shadow: 0 4px 25px var(--accent-glow);
+            transition: transform 0.2s, box-shadow 0.2s;
         }
         .mic-btn:active { transform: scale(0.92); }
         .mic-btn.recording {
             background: linear-gradient(135deg, var(--red), #ff1744);
-            box-shadow: 0 4px 40px var(--red-glow), inset 0 1px 0 rgba(255,255,255,0.15);
-            animation: pulse-btn 1.5s ease-in-out infinite;
+            box-shadow: 0 4px 30px var(--red-glow);
+            animation: pulse-btn 1.4s infinite;
         }
         @keyframes pulse-btn {
-            0%, 100% { box-shadow: 0 4px 30px var(--red-glow); }
-            50% { box-shadow: 0 4px 60px rgba(255,82,82,0.5); }
-        }
-        .mic-btn .ripple {
-            position: absolute;
-            inset: -8px;
-            border-radius: 50%;
-            border: 2px solid var(--accent-secondary);
-            opacity: 0;
-            animation: ripple-out 2s ease-out infinite;
-        }
-        .mic-btn .ripple:nth-child(2) { animation-delay: 0.5s; }
-        .mic-btn .ripple:nth-child(3) { animation-delay: 1s; }
-        .mic-btn:not(.recording) .ripple { display: none; }
-        @keyframes ripple-out {
-            0% { transform: scale(1); opacity: 0.5; border-color: var(--red); }
-            100% { transform: scale(2); opacity: 0; }
+            0%, 100% { box-shadow: 0 4px 20px var(--red-glow); }
+            50% { box-shadow: 0 4px 45px rgba(255,82,82,0.55); }
         }
         .mic-label {
-            text-align: center;
-            font-size: 14px;
+            font-size: 13px;
             color: var(--text-secondary);
-            margin-top: 6px;
-            font-weight: 600;
+            margin-top: 8px;
+            font-weight: 700;
             letter-spacing: 1px;
+        }
+
+        /* ─── PITCH & SUR DISPLAY CARD ─── */
+        .pitch-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 14px 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            backdrop-filter: blur(12px);
+        }
+        .pitch-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .swara-badge {
+            display: flex;
+            align-items: baseline;
+            gap: 6px;
+        }
+        .swara-hindi {
+            font-size: 38px;
+            font-weight: 800;
+            font-family: 'Noto Sans Devanagari', sans-serif;
+            color: var(--cyan);
+            line-height: 1;
+        }
+        .swara-name {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--text-secondary);
+        }
+        .pitch-details {
+            text-align: right;
+        }
+        .pitch-hz {
+            font-size: 20px;
+            font-weight: 800;
+            font-variant-numeric: tabular-nums;
+        }
+        .pitch-sur-state {
+            font-size: 13px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            color: var(--text-muted);
+        }
+
+        /* Tuner Gauge */
+        .tuner-gauge-track {
+            height: 10px;
+            border-radius: 5px;
+            background: rgba(255,255,255,0.06);
+            position: relative;
+            display: flex;
+            overflow: hidden;
+        }
+        .tuner-zone-flat { flex: 1; background: linear-gradient(90deg, transparent, rgba(255,171,0,0.25)); }
+        .tuner-zone-sur { width: 18%; background: rgba(0,230,118,0.4); }
+        .tuner-zone-sharp { flex: 1; background: linear-gradient(90deg, rgba(255,82,82,0.25), transparent); }
+        .tuner-needle {
+            position: absolute;
+            top: -3px;
+            bottom: -3px;
+            width: 4px;
+            border-radius: 2px;
+            background: #fff;
+            box-shadow: 0 0 8px #fff;
+            left: 50%;
+            transform: translateX(-50%);
+            transition: left 0.08s linear, background-color 0.2s;
+        }
+        .tuner-labels {
+            display: flex;
+            justify-content: space-between;
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--text-muted);
+            text-transform: uppercase;
         }
 
         /* ─── dB METER ─── */
-        .db-section {
-            flex-shrink: 0;
-            padding: 0 0 10px;
-        }
-        .db-display {
+        .db-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 14px 16px;
             text-align: center;
-            margin-bottom: 10px;
+        }
+        .db-val-wrap {
+            display: flex;
+            align-items: baseline;
+            justify-content: center;
+            gap: 2px;
         }
         .db-value {
-            font-size: 72px;
+            font-size: 56px;
             font-weight: 900;
-            font-variant-numeric: tabular-nums;
             line-height: 1;
-            transition: color 0.3s;
+            font-variant-numeric: tabular-nums;
         }
-        .db-unit {
-            font-size: 22px;
-            font-weight: 400;
-            color: var(--text-secondary);
-            margin-left: 2px;
-        }
+        .db-unit { font-size: 20px; color: var(--text-secondary); }
         .db-status {
-            font-size: 16px;
+            font-size: 14px;
             font-weight: 700;
-            margin-top: 6px;
             letter-spacing: 1px;
+            margin-top: 4px;
             text-transform: uppercase;
-            transition: color 0.3s;
         }
-
-        .meter-bar-container {
-            background: var(--bg-card);
-            border-radius: 12px;
-            padding: 12px 14px;
-            border: 1px solid var(--border);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-        }
-        .meter-labels {
-            display: flex;
-            justify-content: space-between;
-            font-size: 13px;
-            color: var(--text-muted);
-            margin-bottom: 6px;
-            font-weight: 500;
-        }
+        .meter-bar-container { margin-top: 12px; }
         .meter-track {
-            height: 14px;
-            border-radius: 7px;
-            background: rgba(255,255,255,0.05);
+            height: 12px;
+            border-radius: 6px;
+            background: rgba(255,255,255,0.06);
             position: relative;
             overflow: hidden;
         }
@@ -237,182 +370,84 @@
             position: absolute;
             inset: 0;
             display: flex;
-            border-radius: 7px;
-            overflow: hidden;
+            border-radius: 6px;
         }
-        .meter-zone {
-            height: 100%;
-            opacity: 0.15;
-        }
-        .meter-zone.low { flex: 0.35; background: var(--amber); }
-        .meter-zone.good { flex: 0.40; background: var(--green); }
-        .meter-zone.high { flex: 0.25; background: var(--red); }
-
+        .meter-zone.low { flex: 0.35; background: var(--amber); opacity: 0.15; }
+        .meter-zone.good { flex: 0.40; background: var(--green); opacity: 0.15; }
+        .meter-zone.high { flex: 0.25; background: var(--red); opacity: 0.15; }
         .meter-fill {
             height: 100%;
-            border-radius: 7px;
+            border-radius: 6px;
             width: 0%;
-            transition: width 0.08s linear, background 0.3s;
-            position: relative;
-            z-index: 1;
-        }
-        .meter-indicator {
-            position: absolute;
-            top: -6px;
-            bottom: -6px;
-            width: 3px;
-            background: #fff;
-            border-radius: 2px;
-            box-shadow: 0 0 8px rgba(255,255,255,0.6);
-            transition: left 0.08s linear;
-            left: 0%;
-            z-index: 2;
+            transition: width 0.08s linear;
         }
 
-        .zone-labels {
+        /* ─── PRACTICE MODES ─── */
+        .practice-modes {
             display: flex;
-            justify-content: space-around;
-            margin-top: 6px;
-            font-size: 13px;
-            font-weight: 600;
+            gap: 8px;
+            overflow-x: auto;
+            padding-bottom: 2px;
+            -webkit-overflow-scrolling: touch;
         }
-        .zone-label { display: flex; align-items: center; gap: 4px; color: var(--text-secondary); }
-        .zone-dot { width: 8px; height: 8px; border-radius: 50%; }
-
-        /* ─── IDEAL RANGE ─── */
-        .ideal-range-card {
+        .practice-modes::-webkit-scrollbar { display: none; }
+        .mode-card {
+            min-width: 125px;
             background: var(--bg-card);
             border: 1px solid var(--border);
-            border-radius: 14px;
-            padding: 12px 14px;
-            margin: 8px 0;
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-        }
-        .ideal-range-card .card-title {
-            font-size: 15px;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            color: var(--text-secondary);
-            margin-bottom: 10px;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-        .range-bars {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-        .range-item {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        .range-item .rlabel {
-            font-size: 14px;
-            font-weight: 600;
-            width: 70px;
+            border-radius: 12px;
+            padding: 10px;
+            cursor: pointer;
             flex-shrink: 0;
-            color: var(--text-secondary);
+            transition: all 0.2s;
         }
-        .range-item .rbar {
-            flex: 1;
-            height: 10px;
-            background: rgba(255,255,255,0.06);
-            border-radius: 5px;
-            position: relative;
-            overflow: hidden;
+        .mode-card.active-mode {
+            border-color: var(--accent-primary);
+            background: rgba(108,92,231,0.15);
         }
-        .range-item .rfill {
-            height: 100%;
-            border-radius: 5px;
-            position: absolute;
-        }
-        .range-item .rvalue {
-            font-size: 14px;
-            font-weight: 700;
-            width: 70px;
-            text-align: right;
-            font-variant-numeric: tabular-nums;
-            flex-shrink: 0;
-        }
-
-        /* ─── WAVEFORM STRIP ─── */
-        .wave-strip {
-            width: 100%;
-            height: 80px;
-            flex-shrink: 0;
-            position: relative;
-            overflow: hidden;
-            border-radius: 10px;
-        }
-        .wave-strip canvas {
-            width: 100%;
-            height: 100%;
-            display: block;
-        }
+        .mode-card .mode-icon { font-size: 22px; margin-bottom: 4px; }
+        .mode-card .mode-name { font-size: 13px; font-weight: 700; }
+        .mode-card .mode-range { font-size: 11px; font-weight: 700; color: var(--accent-secondary); margin-top: 4px; }
 
         /* ─── STATS GRID ─── */
         .stats-grid {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 8px;
-            flex-shrink: 0;
-            padding: 4px 0;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 6px;
         }
         .stat-card {
             background: var(--bg-card);
             border: 1px solid var(--border);
             border-radius: 12px;
-            padding: 10px;
+            padding: 8px 4px;
             text-align: center;
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            transition: background 0.2s;
         }
-        .stat-card .stat-icon { font-size: 20px; margin-bottom: 4px; }
+        .stat-card .stat-icon { font-size: 16px; }
         .stat-card .stat-value {
-            font-size: 26px;
+            font-size: 19px;
             font-weight: 800;
+            margin-top: 2px;
             font-variant-numeric: tabular-nums;
-            line-height: 1.2;
         }
         .stat-card .stat-label {
-            font-size: 12px;
+            font-size: 10px;
             color: var(--text-secondary);
             font-weight: 600;
             text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-top: 3px;
         }
 
-        /* ─── SCORE ─── */
-        .score-section {
-            flex-shrink: 0;
-            padding: 4px 0;
-        }
+        /* ─── VOCAL SCORE CARD ─── */
         .score-card {
             background: linear-gradient(135deg, rgba(108,92,231,0.12) 0%, rgba(0,230,118,0.08) 100%);
-            border: 1px solid rgba(108,92,231,0.2);
+            border: 1px solid rgba(108,92,231,0.25);
             border-radius: 16px;
-            padding: 14px;
+            padding: 12px 14px;
             display: flex;
             align-items: center;
             gap: 14px;
         }
-        .score-ring {
-            width: 64px;
-            height: 64px;
-            position: relative;
-            flex-shrink: 0;
-        }
-        .score-ring svg {
-            width: 100%;
-            height: 100%;
-            transform: rotate(-90deg);
-        }
+        .score-ring { width: 62px; height: 62px; position: relative; flex-shrink: 0; }
+        .score-ring svg { width: 100%; height: 100%; transform: rotate(-90deg); }
         .score-ring .ring-bg { fill: none; stroke: rgba(255,255,255,0.06); stroke-width: 5; }
         .score-ring .ring-fg {
             fill: none;
@@ -421,7 +456,7 @@
             stroke-linecap: round;
             stroke-dasharray: 163;
             stroke-dashoffset: 163;
-            transition: stroke-dashoffset 0.6s ease, stroke 0.3s;
+            transition: stroke-dashoffset 0.5s ease, stroke 0.3s;
         }
         .score-ring .score-text {
             position: absolute;
@@ -429,241 +464,68 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 20px;
+            font-size: 19px;
             font-weight: 900;
         }
         .score-info { flex: 1; }
-        .score-info .score-title {
-            font-size: 17px;
-            font-weight: 700;
-        }
-        .score-info .score-desc {
-            font-size: 14px;
-            color: var(--text-secondary);
-            margin-top: 3px;
-            line-height: 1.4;
-        }
-        .score-info .score-tips {
-            margin-top: 6px;
-            display: flex;
-            gap: 6px;
-            flex-wrap: wrap;
-        }
+        .score-info .score-title { font-size: 16px; font-weight: 800; }
+        .score-info .score-desc { font-size: 12px; color: var(--text-secondary); margin-top: 2px; }
+        .score-tips { display: flex; gap: 6px; margin-top: 6px; flex-wrap: wrap; }
         .score-tip {
-            font-size: 12px;
-            font-weight: 600;
-            padding: 4px 10px;
+            font-size: 11px;
+            padding: 3px 8px;
             border-radius: 6px;
-            background: rgba(255,255,255,0.06);
-            color: var(--text-secondary);
+            background: rgba(255,255,255,0.08);
             border: 1px solid var(--border);
+            font-weight: 600;
         }
-
-        /* ─── PRACTICE MODES ─── */
-        .practice-section {
-            flex-shrink: 0;
-            padding: 4px 0;
-        }
-        .practice-section .section-title {
-            font-size: 15px;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            color: var(--text-secondary);
-            margin-bottom: 10px;
-        }
-        .practice-modes {
-            display: flex;
-            gap: 8px;
-            overflow-x: auto;
-            -webkit-overflow-scrolling: touch;
-            padding-bottom: 4px;
-        }
-        .practice-modes::-webkit-scrollbar { display: none; }
-        .mode-card {
-            min-width: 130px;
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 12px;
-            cursor: pointer;
-            transition: all 0.2s;
-            flex-shrink: 0;
-        }
-        .mode-card:active { transform: scale(0.96); background: var(--bg-card-hover); }
-        .mode-card.active-mode { border-color: var(--accent-primary); background: rgba(108,92,231,0.1); }
-        .mode-card .mode-icon { font-size: 26px; margin-bottom: 6px; }
-        .mode-card .mode-name { font-size: 15px; font-weight: 700; }
-        .mode-card .mode-desc { font-size: 12px; color: var(--text-secondary); margin-top: 3px; line-height: 1.3; }
-        .mode-card .mode-range { font-size: 12px; font-weight: 700; color: var(--accent-secondary); margin-top: 5px; }
 
         /* ─── HISTORY ─── */
-        .history-section {
-            flex-shrink: 0;
-            padding: 4px 0;
-        }
-        .history-section .section-title {
-            font-size: 15px;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            color: var(--text-secondary);
-            margin-bottom: 10px;
-        }
-        .history-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 10px;
-        }
+        .history-section { display: flex; flex-direction: column; gap: 8px; }
+        .history-header { display: flex; justify-content: space-between; align-items: center; }
+        .section-title { font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--text-secondary); }
         .reset-btn {
             background: rgba(255,82,82,0.12);
             border: 1px solid rgba(255,82,82,0.25);
             color: var(--red);
             font-family: inherit;
-            font-size: 13px;
-            font-weight: 600;
-            padding: 6px 14px;
-            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 700;
+            padding: 4px 10px;
+            border-radius: 6px;
             cursor: pointer;
-            transition: all 0.2s;
-            display: flex;
-            align-items: center;
-            gap: 4px;
         }
-        .reset-btn:active { transform: scale(0.95); background: rgba(255,82,82,0.2); }
-        .history-list {
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-        }
+        .history-list { display: flex; flex-direction: column; gap: 8px; }
         .history-item {
             background: var(--bg-card);
             border: 1px solid var(--border);
-            border-radius: 10px;
+            border-radius: 12px;
             padding: 10px 12px;
             display: flex;
-            justify-content: space-between;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .hi-top { display: flex; justify-content: space-between; align-items: center; }
+        .hi-mode { font-size: 14px; font-weight: 700; }
+        .hi-meta { font-size: 12px; color: var(--text-muted); }
+        .hi-score { font-size: 20px; font-weight: 900; }
+        .hi-audio-row { display: flex; gap: 8px; align-items: center; }
+        .history-player { flex: 1; height: 34px; border-radius: 17px; }
+        .download-btn {
+            background: rgba(255,255,255,0.08);
+            border: 1px solid var(--border);
+            color: #fff;
+            padding: 6px 10px;
+            border-radius: 8px;
+            font-size: 13px;
+            text-decoration: none;
+            display: flex;
             align-items: center;
-        }
-        .history-item .hi-left { display: flex; flex-direction: column; }
-        .history-item .hi-mode { font-size: 15px; font-weight: 600; }
-        .history-item .hi-time { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
-        .history-item .hi-score {
-            font-size: 22px;
-            font-weight: 800;
-            color: var(--green);
-        }
-        .history-audio { flex-shrink: 0; }
-        .history-player {
-            width: 100%;
-            height: 36px;
-            margin-top: 10px;
-            border-radius: 18px;
-            outline: none;
-        }
-        .history-player::-webkit-media-controls-panel {
-            background-color: var(--bg-card-hover);
-        }
-        .history-player::-webkit-media-controls-current-time-display,
-        .history-player::-webkit-media-controls-time-remaining-display {
-            color: var(--text-primary);
         }
 
         /* ─── FOOTER ─── */
-        .footer {
-            text-align: center;
-            padding: 12px 0 4px;
-            flex-shrink: 0;
-        }
-        .footer .dev {
-            font-size: 13px;
-            font-weight: 600;
-            color: var(--text-muted);
-            letter-spacing: 2px;
-            text-transform: uppercase;
-        }
-        .footer .dev span {
-            background: linear-gradient(135deg, var(--accent-primary), var(--cyan));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            font-weight: 800;
-        }
-
-        /* ─── IDLE STATE ─── */
-        .idle-overlay {
-            position: absolute;
-            inset: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--text-muted);
-            font-size: 15px;
-            font-weight: 500;
-            pointer-events: none;
-            letter-spacing: 1px;
-        }
-
-        /* ─── ANIMATIONS ─── */
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(12px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        .fade-in { animation: fadeIn 0.5s ease-out both; }
-        .fade-in-1 { animation-delay: 0.05s; }
-        .fade-in-2 { animation-delay: 0.1s; }
-        .fade-in-3 { animation-delay: 0.15s; }
-        .fade-in-4 { animation-delay: 0.2s; }
-        .fade-in-5 { animation-delay: 0.25s; }
-        .fade-in-6 { animation-delay: 0.3s; }
-        .fade-in-7 { animation-delay: 0.35s; }
-
-        /* ─── PERMISSION MODAL ─── */
-        .modal-overlay {
-            position: fixed;
-            inset: 0;
-            background: rgba(0,0,0,0.75);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 100;
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.3s;
-        }
-        .modal-overlay.show { opacity: 1; pointer-events: auto; }
-        .modal-box {
-            background: var(--bg-secondary);
-            border: 1px solid var(--border);
-            border-radius: 20px;
-            padding: 28px 24px;
-            max-width: 320px;
-            width: 90%;
-            text-align: center;
-            transform: scale(0.9);
-            transition: transform 0.3s;
-        }
-        .modal-overlay.show .modal-box { transform: scale(1); }
-        .modal-box .modal-icon { font-size: 48px; margin-bottom: 12px; }
-        .modal-box h2 { font-size: 18px; font-weight: 700; margin-bottom: 8px; }
-        .modal-box p { font-size: 13px; color: var(--text-secondary); line-height: 1.5; margin-bottom: 20px; }
-        .modal-btn {
-            width: 100%;
-            padding: 14px;
-            border: none;
-            border-radius: 12px;
-            background: linear-gradient(135deg, var(--accent-primary), #8b5cf6);
-            color: #fff;
-            font-family: inherit;
-            font-size: 15px;
-            font-weight: 700;
-            cursor: pointer;
-            transition: transform 0.2s;
-        }
-        .modal-btn:active { transform: scale(0.96); }
+        .footer { text-align: center; font-size: 12px; color: var(--text-muted); padding: 8px 0; }
+        .footer span { color: var(--cyan); font-weight: 700; }
 
         /* ─── TOAST ─── */
         .toast {
@@ -672,71 +534,113 @@
             left: 50%;
             transform: translateX(-50%) translateY(-120%);
             background: var(--bg-secondary);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 10px 18px;
-            font-size: 14px;
+            border: 1px solid var(--accent-secondary);
+            color: #fff;
+            border-radius: 10px;
+            padding: 8px 16px;
+            font-size: 13px;
             font-weight: 600;
-            z-index: 200;
-            transition: transform 0.4s cubic-bezier(0.2,0.8,0.2,1);
-            box-shadow: 0 8px 32px rgba(0,0,0,0.4);
-            white-space: nowrap;
+            z-index: 999;
+            transition: transform 0.3s ease;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.5);
         }
         .toast.show { transform: translateX(-50%) translateY(0); }
     </style>
 </head>
 <body>
 
-<div class="modal-overlay" id="permissionModal">
-    <div class="modal-box">
-        <div class="modal-icon">🎙️</div>
-        <h2>Microphone Permission</h2>
-        <p>Microphone access is required to analyze your voice. Please grant permission to continue.</p>
-        <button class="modal-btn" onclick="requestMic()">Grant Permission →</button>
-    </div>
-</div>
-
 <div class="toast" id="toast"></div>
 
 <div class="app-container">
 
     <!-- HEADER -->
-    <div class="header fade-in fade-in-1">
+    <div class="header">
         <div class="logo">Vocal Pro</div>
         <h1>🎤 Vocal Analyzer Pro</h1>
-        <div class="subtitle">Beginner Singer dB & Vocal Analysis</div>
+        <div class="subtitle">Sur (सुर), Pitch & Dynamic Riyaz Engine</div>
     </div>
 
-    <!-- WAVEFORM LINE -->
-    <div class="wave-strip fade-in fade-in-2">
-        <canvas id="vizCanvas"></canvas>
+    <!-- RIYAZ BAR: ROOT KEY (सा) & TANPURA -->
+    <div class="riyaz-bar">
+        <div class="scale-selector">
+            <span>Root (सा):</span>
+            <select class="scale-select" id="rootSelect" onchange="changeRootKey(this.value)">
+                <option value="1" selected>C# (काली 1 - Male Std)</option>
+                <option value="2">D (सफेद 2)</option>
+                <option value="3">D# (काली 2)</option>
+                <option value="4">E (सफेद 3)</option>
+                <option value="5">F (सफेद 4)</option>
+                <option value="6">F# (काली 3)</option>
+                <option value="7">G (सफेद 5)</option>
+                <option value="8">G# (काली 4 - Female Std)</option>
+                <option value="9">A (सफेद 6)</option>
+                <option value="10">A# (काली 5)</option>
+                <option value="11">B (सफेद 7)</option>
+                <option value="0">C (सफेद 1)</option>
+            </select>
+        </div>
+        <button class="tanpura-btn" id="tanpuraBtn" onclick="toggleTanpura()">
+            <span>🪕</span> Tanpura Drone
+        </button>
+    </div>
+
+    <!-- VISUALIZER WRAPPER WITH TABS -->
+    <div class="viz-box">
+        <div class="viz-controls">
+            <button class="viz-pill active" onclick="setVizMode('waveform', this)">〰️ Waveform</button>
+            <button class="viz-pill" onclick="setVizMode('spectrum', this)">📊 Spectrum</button>
+            <button class="viz-pill" onclick="setVizMode('circular', this)">🔘 Radial</button>
+        </div>
+        <div class="wave-strip">
+            <canvas id="vizCanvas"></canvas>
+        </div>
     </div>
 
     <!-- MIC BUTTON -->
-    <div class="mic-section fade-in fade-in-2">
-        <div style="display:flex;flex-direction:column;align-items:center;">
-            <button class="mic-btn" id="micBtn" onclick="toggleRecording()">
-                <span id="micIcon">🎤</span>
-                <div class="ripple"></div>
-                <div class="ripple"></div>
-                <div class="ripple"></div>
-            </button>
-            <div class="mic-label" id="micLabel">TAP TO START</div>
+    <div class="mic-section">
+        <button class="mic-btn" id="micBtn" onclick="toggleRecording()">
+            <span id="micIcon">🎤</span>
+        </button>
+        <div class="mic-label" id="micLabel">TAP TO START RIYAZ</div>
+    </div>
+
+    <!-- REAL-TIME PITCH & SWARA CARD -->
+    <div class="pitch-card">
+        <div class="pitch-top">
+            <div class="swara-badge">
+                <div class="swara-hindi" id="swaraHindi">—</div>
+                <div class="swara-name" id="swaraName">Sing to detect Sur</div>
+            </div>
+            <div class="pitch-details">
+                <div class="pitch-hz" id="pitchHz">0.0 Hz</div>
+                <div class="pitch-sur-state" id="pitchSurState">READY</div>
+            </div>
+        </div>
+
+        <!-- Tuner Needle Gauge -->
+        <div>
+            <div class="tuner-gauge-track">
+                <div class="tuner-zone-flat"></div>
+                <div class="tuner-zone-sur"></div>
+                <div class="tuner-zone-sharp"></div>
+                <div class="tuner-needle" id="tunerNeedle"></div>
+            </div>
+            <div class="tuner-labels" style="margin-top:4px;">
+                <span>Flat (उतरा)</span>
+                <span style="color:var(--green)">Sur (सुर में)</span>
+                <span>Sharp (चढ़ा)</span>
+            </div>
         </div>
     </div>
 
-    <!-- dB DISPLAY -->
-    <div class="db-section fade-in fade-in-3">
-        <div class="db-display">
-            <span class="db-value" id="dbValue">0</span><span class="db-unit">dB</span>
-            <div class="db-status" id="dbStatus">READY</div>
+    <!-- dB METER CARD -->
+    <div class="db-card">
+        <div class="db-val-wrap">
+            <span class="db-value" id="dbValue">0</span>
+            <span class="db-unit">dB</span>
         </div>
+        <div class="db-status" id="dbStatus">READY</div>
         <div class="meter-bar-container">
-            <div class="meter-labels">
-                <span>0 dB</span>
-                <span>Ideal Zone</span>
-                <span>100 dB</span>
-            </div>
             <div class="meter-track">
                 <div class="meter-zones">
                     <div class="meter-zone low"></div>
@@ -744,77 +648,39 @@
                     <div class="meter-zone high"></div>
                 </div>
                 <div class="meter-fill" id="meterFill"></div>
-                <div class="meter-indicator" id="meterIndicator"></div>
-            </div>
-            <div class="zone-labels">
-                <div class="zone-label"><div class="zone-dot" style="background:var(--amber)"></div> Low</div>
-                <div class="zone-label"><div class="zone-dot" style="background:var(--green)"></div> Good</div>
-                <div class="zone-label"><div class="zone-dot" style="background:var(--red)"></div> Loud</div>
-            </div>
-        </div>
-    </div>
-
-    <!-- IDEAL RANGE CARD -->
-    <div class="ideal-range-card fade-in fade-in-3">
-        <div class="card-title">🎯 Ideal Singing Range</div>
-        <div class="range-bars">
-            <div class="range-item">
-                <span class="rlabel">Soft</span>
-                <div class="rbar"><div class="rfill" style="left:30%;width:10%;background:var(--amber);border-radius:4px;"></div></div>
-                <span class="rvalue" style="color:var(--amber)">30–40 dB</span>
-            </div>
-            <div class="range-item">
-                <span class="rlabel">Medium</span>
-                <div class="rbar"><div class="rfill" style="left:40%;width:25%;background:var(--green);border-radius:4px;"></div></div>
-                <span class="rvalue" style="color:var(--green)">40–65 dB</span>
-            </div>
-            <div class="range-item">
-                <span class="rlabel">Loud</span>
-                <div class="rbar"><div class="rfill" style="left:65%;width:15%;background:var(--red);border-radius:4px;"></div></div>
-                <span class="rvalue" style="color:var(--red)">65–80 dB</span>
-            </div>
-            <div class="range-item">
-                <span class="rlabel">Power</span>
-                <div class="rbar"><div class="rfill" style="left:80%;width:15%;background:#e040fb;border-radius:4px;"></div></div>
-                <span class="rvalue" style="color:#e040fb">80–95 dB</span>
             </div>
         </div>
     </div>
 
     <!-- PRACTICE MODES -->
-    <div class="practice-section fade-in fade-in-4">
-        <div class="section-title">🎵 Practice Mode</div>
-        <div class="practice-modes" id="practiceModes">
+    <div>
+        <div class="section-title" style="margin-bottom:6px;">🎵 Practice Mode</div>
+        <div class="practice-modes">
             <div class="mode-card active-mode" data-min="40" data-max="65" data-name="Normal Singing" onclick="selectMode(this)">
                 <div class="mode-icon">🎶</div>
                 <div class="mode-name">Normal Singing</div>
-                <div class="mode-desc">Regular singing practice</div>
                 <div class="mode-range">40–65 dB</div>
-            </div>
-            <div class="mode-card" data-min="30" data-max="50" data-name="Soft/Humming" onclick="selectMode(this)">
-                <div class="mode-icon">🤫</div>
-                <div class="mode-name">Soft / Humming</div>
-                <div class="mode-desc">Soft voice & humming</div>
-                <div class="mode-range">30–50 dB</div>
-            </div>
-            <div class="mode-card" data-min="55" data-max="80" data-name="Loud/Alaap" onclick="selectMode(this)">
-                <div class="mode-icon">🔊</div>
-                <div class="mode-name">Loud / Alaap</div>
-                <div class="mode-desc">Alaap & power notes</div>
-                <div class="mode-range">55–80 dB</div>
             </div>
             <div class="mode-card" data-min="35" data-max="55" data-name="Sa Re Ga Ma" onclick="selectMode(this)">
                 <div class="mode-icon">🎹</div>
                 <div class="mode-name">Sa Re Ga Ma</div>
-                <div class="mode-desc">Scale practice</div>
                 <div class="mode-range">35–55 dB</div>
+            </div>
+            <div class="mode-card" data-min="30" data-max="50" data-name="Soft / Humming" onclick="selectMode(this)">
+                <div class="mode-icon">🤫</div>
+                <div class="mode-name">Soft / Humming</div>
+                <div class="mode-range">30–50 dB</div>
+            </div>
+            <div class="mode-card" data-min="55" data-max="82" data-name="Alaap / Power" onclick="selectMode(this)">
+                <div class="mode-icon">🔊</div>
+                <div class="mode-name">Alaap / Power</div>
+                <div class="mode-range">55–82 dB</div>
             </div>
         </div>
     </div>
 
-
-    <!-- STATS -->
-    <div class="stats-grid fade-in fade-in-6">
+    <!-- REAL-TIME STATS -->
+    <div class="stats-grid">
         <div class="stat-card">
             <div class="stat-icon">📈</div>
             <div class="stat-value" id="statMax">0</div>
@@ -826,46 +692,48 @@
             <div class="stat-label">Avg dB</div>
         </div>
         <div class="stat-card">
+            <div class="stat-icon">🎯</div>
+            <div class="stat-value" id="statSur" style="color:var(--green)">0%</div>
+            <div class="stat-label">Sur Acc.</div>
+        </div>
+        <div class="stat-card">
             <div class="stat-icon">⏱️</div>
             <div class="stat-value" id="statTime">0:00</div>
             <div class="stat-label">Duration</div>
         </div>
     </div>
 
-    <!-- SCORE -->
-    <div class="score-section fade-in fade-in-6">
-        <div class="score-card">
-            <div class="score-ring">
-                <svg viewBox="0 0 60 60">
-                    <circle class="ring-bg" cx="30" cy="30" r="26"/>
-                    <circle class="ring-fg" id="scoreRing" cx="30" cy="30" r="26"/>
-                </svg>
-                <div class="score-text" id="scoreValue">0</div>
-            </div>
-            <div class="score-info">
-                <div class="score-title" id="scoreTitle">Vocal Score</div>
-                <div class="score-desc" id="scoreDesc">Start singing to get your real-time vocal score.</div>
-                <div class="score-tips" id="scoreTips"></div>
-            </div>
+    <!-- VOCAL SCORE CARD -->
+    <div class="score-card">
+        <div class="score-ring">
+            <svg viewBox="0 0 60 60">
+                <circle class="ring-bg" cx="30" cy="30" r="26"/>
+                <circle class="ring-fg" id="scoreRing" cx="30" cy="30" r="26"/>
+            </svg>
+            <div class="score-text" id="scoreValue">0</div>
+        </div>
+        <div class="score-info">
+            <div class="score-title" id="scoreTitle">Vocal Performance</div>
+            <div class="score-desc" id="scoreDesc">Sing to calculate real-time Sur & stability score.</div>
+            <div class="score-tips" id="scoreTips"></div>
         </div>
     </div>
 
-    <!-- HISTORY -->
-    <div class="history-section fade-in fade-in-7">
+    <!-- SESSION HISTORY WITH INDEXED-DB AUDIO -->
+    <div class="history-section">
         <div class="history-header">
-            <div class="section-title" style="margin-bottom:0">📋 Session History</div>
-            <button class="reset-btn" onclick="resetSessions()">🗑️ Reset</button>
+            <div class="section-title">📋 Session History</div>
+            <button class="reset-btn" onclick="clearAllHistory()">🗑️ Clear All</button>
         </div>
         <div class="history-list" id="historyList">
-            <div class="history-item" style="justify-content:center;">
-                <span style="color:var(--text-muted);font-size:13px;">No sessions yet — start practicing!</span>
+            <div style="text-align:center;color:var(--text-muted);font-size:13px;padding:12px;">
+                No sessions saved yet.
             </div>
         </div>
     </div>
 
-    <!-- FOOTER -->
-    <div class="footer fade-in fade-in-7">
-        <div class="dev">Developed By <span>ROCKY</span></div>
+    <div class="footer">
+        Developed By <span>ROCKY</span> · Vocal Pro Engine
     </div>
 
 </div>
@@ -874,47 +742,101 @@
 (function() {
     'use strict';
 
+    // ─── SWARA & NOTE TABLE ───
+    const NOTE_NAMES = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
+    const SWARA_TABLE = [
+        { hi: 'सा', en: 'Sa', name: 'Shadja (सा)' },
+        { hi: 'रे॒', en: 're (k)', name: 'Komal Rishabh (कोमल रे)' },
+        { hi: 'रे', en: 'Re', name: 'Shuddha Rishabh (शुद्ध रे)' },
+        { hi: 'ग॒', en: 'ga (k)', name: 'Komal Gandhar (कोमल ग)' },
+        { hi: 'ग', en: 'Ga', name: 'Shuddha Gandhar (शुद्ध ग)' },
+        { hi: 'म', en: 'Ma', name: 'Shuddha Madhyam (शुद्ध म)' },
+        { hi: 'म॑', en: 'Ma (t)', name: 'Teevra Madhyam (तीव्र म)' },
+        { hi: 'प', en: 'Pa', name: 'Pancham (प)' },
+        { hi: 'ध॒', en: 'dha (k)', name: 'Komal Dhaivat (कोमल ध)' },
+        { hi: 'ध', en: 'Dha', name: 'Shuddha Dhaivat (शुद्ध ध)' },
+        { hi: 'नि॒', en: 'ni (k)', name: 'Komal Nishad (कोमल नि)' },
+        { hi: 'नि', en: 'Ni', name: 'Shuddha Nishad (शुद्ध नि)' }
+    ];
+
+    // Standard Tonic Frequencies (Octave 3)
+    const ROOT_FREQS = [130.81, 138.59, 146.83, 155.56, 164.81, 174.61, 185.00, 196.00, 207.65, 220.00, 233.08, 246.94];
+
     // ─── STATE ───
-    let audioCtx, analyser, source, stream;
-    let dataArray, freqArray, bufferLength;
+    let audioCtx = null;
+    let analyser, source, micStream;
+    let floatBuffer, freqArray;
     let isRecording = false;
-
-    // Recording state
-    let mediaRecorder;
-    let audioChunks = [];
-    let audioMimeType = '';
-
-    let animFrame;
+    let animFrame = null;
     let startTime = 0;
-    let dbHistory = [];
-    let peakDb = 0;
-    let sessionHistory = JSON.parse(localStorage.getItem('vocalProHistory') || '[]');
+
+    let vizMode = 'waveform';
+    let rootKeyIndex = 1; // Default C# (काली 1)
     let currentMode = { min: 40, max: 65, name: 'Normal Singing' };
 
-    // ─── DOM ───
+    let dbHistory = [];
+    let inSurFrames = 0;
+    let totalVoicedFrames = 0;
+    let peakDb = 0;
+
+    // MediaRecorder & IndexedDB
+    let mediaRecorder = null;
+    let recordedChunks = [];
+    let dbInstance = null;
+
+    // Tanpura Drone Synth State
+    let isTanpuraOn = false;
+    let tanpuraNodes = null;
+
+    // ─── DOM REFS ───
     const micBtn = document.getElementById('micBtn');
     const micIcon = document.getElementById('micIcon');
     const micLabel = document.getElementById('micLabel');
     const dbValueEl = document.getElementById('dbValue');
     const dbStatusEl = document.getElementById('dbStatus');
     const meterFill = document.getElementById('meterFill');
-    const meterIndicator = document.getElementById('meterIndicator');
     const vizCanvas = document.getElementById('vizCanvas');
+    const canvasCtx = vizCanvas.getContext('2d');
+
+    const swaraHindi = document.getElementById('swaraHindi');
+    const swaraName = document.getElementById('swaraName');
+    const pitchHz = document.getElementById('pitchHz');
+    const pitchSurState = document.getElementById('pitchSurState');
+    const tunerNeedle = document.getElementById('tunerNeedle');
 
     const statMax = document.getElementById('statMax');
     const statAvg = document.getElementById('statAvg');
+    const statSur = document.getElementById('statSur');
     const statTime = document.getElementById('statTime');
+
     const scoreValue = document.getElementById('scoreValue');
     const scoreRing = document.getElementById('scoreRing');
     const scoreTitle = document.getElementById('scoreTitle');
     const scoreDesc = document.getElementById('scoreDesc');
     const scoreTips = document.getElementById('scoreTips');
     const historyList = document.getElementById('historyList');
-    const permModal = document.getElementById('permissionModal');
-    const canvasCtx = vizCanvas.getContext('2d');
+    const tanpuraBtn = document.getElementById('tanpuraBtn');
 
-    // ─── INIT ───
-    renderHistory();
+    // ─── INDEXED-DB SETUP (Unlimited reliable Audio Storage) ───
+    function initDB() {
+        return new Promise((resolve) => {
+            const req = indexedDB.open('VocalProRecordingsDB', 1);
+            req.onupgradeneeded = (e) => {
+                const db = e.target.result;
+                if (!db.objectStoreNames.contains('sessions')) {
+                    db.createObjectStore('sessions', { keyPath: 'id', autoIncrement: true });
+                }
+            };
+            req.onsuccess = (e) => {
+                dbInstance = e.target.result;
+                loadHistoryFromDB();
+                resolve();
+            };
+            req.onerror = () => resolve();
+        });
+    }
+
+    initDB();
     resizeCanvas();
     window.addEventListener('resize', resizeCanvas);
 
@@ -925,368 +847,310 @@
         canvasCtx.scale(window.devicePixelRatio || 2, window.devicePixelRatio || 2);
     }
 
-    // ─── MIC REQUEST ───
-    async function acquireMic() {
-        try {
-            stream = await navigator.mediaDevices.getUserMedia({
-                audio: {
-                    echoCancellation: false,
-                    noiseSuppression: false,
-                    autoGainControl: false
-                }
-            });
-            permModal.classList.remove('show');
-            return true;
-        } catch (e) {
-            showToast('❌ Microphone access denied');
-            return false;
-        }
-    }
-
-    // Auto-acquire mic on page load (will succeed silently if already granted)
-    (async function() {
-        try {
-            // Check if permission is already granted
-            if (navigator.permissions && navigator.permissions.query) {
-                const result = await navigator.permissions.query({ name: 'microphone' });
-                if (result.state === 'granted') {
-                    await acquireMic();
-                }
-            } else {
-                // Safari fallback: just try to acquire
-                await acquireMic();
-            }
-        } catch (e) {
-            // permissions API not supported, will ask on first tap
-        }
-    })();
-
-    window.requestMic = async function() {
-        const ok = await acquireMic();
-        if (ok) startAnalysis();
-    };
-
-    // ─── TOGGLE RECORDING ───
-    window.toggleRecording = async function() {
-        if (!isRecording) {
-            if (!stream) {
-                const ok = await acquireMic();
-                if (!ok) return;
-            }
-            startAnalysis();
-        } else {
-            stopAnalysis();
-        }
-    };
-
-    function startAnalysis() {
+    // ─── AUDIO CONTEXT INIT ───
+    function ensureAudioContext() {
         if (!audioCtx) {
             audioCtx = new (window.AudioContext || window.webkitAudioContext)();
         }
-        if (audioCtx.state === 'suspended') audioCtx.resume();
+        if (audioCtx.state === 'suspended') {
+            audioCtx.resume();
+        }
+    }
+
+    // ─── RECORDING CONTROLS ───
+    window.toggleRecording = async function() {
+        if (!isRecording) {
+            try {
+                micStream = await navigator.mediaDevices.getUserMedia({
+                    audio: { echoCancellation: false, noiseSuppression: false, autoGainControl: false }
+                });
+                startEngine();
+            } catch (err) {
+                showToast('❌ Microphone permission denied');
+            }
+        } else {
+            stopEngine();
+        }
+    };
+
+    function startEngine() {
+        ensureAudioContext();
 
         analyser = audioCtx.createAnalyser();
         analyser.fftSize = 2048;
-        analyser.smoothingTimeConstant = 0.8;
-        bufferLength = analyser.frequencyBinCount;
-        dataArray = new Uint8Array(analyser.fftSize);
-        freqArray = new Uint8Array(bufferLength);
+        analyser.smoothingTimeConstant = 0.7;
+        floatBuffer = new Float32Array(analyser.fftSize);
+        freqArray = new Uint8Array(analyser.frequencyBinCount);
 
-        source = audioCtx.createMediaStreamSource(stream);
+        source = audioCtx.createMediaStreamSource(micStream);
         source.connect(analyser);
 
         isRecording = true;
         startTime = Date.now();
         dbHistory = [];
+        inSurFrames = 0;
+        totalVoicedFrames = 0;
         peakDb = 0;
 
-        // Start recording audio
-        audioChunks = [];
+        // Init MediaRecorder
+        recordedChunks = [];
         try {
-            // Find supported mime type for iOS / Android cross-compatibility
-            const types = [
-                'audio/mp4', 
-                'audio/webm;codecs=opus', 
-                'audio/webm', 
-                'audio/ogg;codecs=opus', 
-                ''
-            ];
-            audioMimeType = types.find(type => type === '' || MediaRecorder.isTypeSupported(type));
-            
-            mediaRecorder = new MediaRecorder(stream, audioMimeType ? { mimeType: audioMimeType } : {});
-            mediaRecorder.ondataavailable = e => { if (e.data.size > 0) audioChunks.push(e.data); };
+            const mime = MediaRecorder.isTypeSupported('audio/webm') ? 'audio/webm' : 'audio/mp4';
+            mediaRecorder = new MediaRecorder(micStream, { mimeType: mime });
+            mediaRecorder.ondataavailable = e => { if (e.data.size > 0) recordedChunks.push(e.data); };
             mediaRecorder.start();
         } catch (e) {
-            console.error('MediaRecorder error:', e);
+            console.warn('MediaRecorder init failed', e);
         }
 
         micBtn.classList.add('recording');
         micIcon.textContent = '⏹️';
-        micLabel.textContent = 'TAP TO STOP';
-
+        micLabel.textContent = 'TAP TO FINISH RIYAZ';
         dbStatusEl.textContent = 'LISTENING...';
 
         draw();
     }
 
-    function stopAnalysis() {
+    function stopEngine() {
         isRecording = false;
         cancelAnimationFrame(animFrame);
 
         if (mediaRecorder && mediaRecorder.state !== 'inactive') {
-            mediaRecorder.onstop = () => { processAndSaveSession(); };
+            mediaRecorder.onstop = saveCompletedSession;
             mediaRecorder.stop();
         } else {
-            processAndSaveSession();
+            saveCompletedSession();
         }
 
         if (source) { source.disconnect(); source = null; }
+        if (micStream) {
+            micStream.getTracks().forEach(track => track.stop());
+            micStream = null;
+        }
 
         micBtn.classList.remove('recording');
         micIcon.textContent = '🎤';
-        micLabel.textContent = 'TAP TO START';
-        dbStatusEl.textContent = 'STOPPED';
+        micLabel.textContent = 'TAP TO START RIYAZ';
+        dbStatusEl.textContent = 'PAUSED';
+
+        // Clear tuner
+        swaraHindi.textContent = '—';
+        swaraName.textContent = 'Sing to detect Sur';
+        pitchHz.textContent = '0.0 Hz';
+        pitchSurState.textContent = 'READY';
+        tunerNeedle.style.left = '50%';
+        tunerNeedle.style.background = '#fff';
 
         clearCanvas();
     }
 
-    function processAndSaveSession() {
-        // Save session
-        if (dbHistory.length > 10) {
-            const avgDb = Math.round(dbHistory.reduce((a, b) => a + b, 0) / dbHistory.length);
-            const score = calcScore(avgDb);
-            const elapsed = Date.now() - startTime;
-            
-            // Create Audio Blob URI
-            let audioDataUrl = null;
-            if (audioChunks.length > 0) {
-                const blob = new Blob(audioChunks, { type: audioMimeType || 'audio/mp4' });
-                // We use FileReader to store it as base64 in localStorage
-                const reader = new FileReader();
-                reader.readAsDataURL(blob);
-                reader.onloadend = function() {
-                    audioDataUrl = reader.result;
-                    saveToStorage(avgDb, score, elapsed, audioDataUrl);
-                };
-                return; // Wait for reader to finish
-            }
-
-            saveToStorage(avgDb, score, elapsed, null);
-        }
-    }
-
-    function saveToStorage(avgDb, score, elapsed, audioUrl) {
-        const session = {
-            mode: currentMode.name,
-            avgDb,
-            peakDb: Math.round(peakDb),
-            score,
-            duration: formatTime(elapsed),
-            time: new Date().toLocaleTimeString('hi-IN', { hour: '2-digit', minute: '2-digit' }),
-            audioUrl: audioUrl
-        };
-        sessionHistory.unshift(session);
-        if (sessionHistory.length > 10) sessionHistory.pop();
-        
-        try {
-            localStorage.setItem('vocalProHistory', JSON.stringify(sessionHistory));
-        } catch (e) {
-            // LocalStorage quota exceeded (base64 audio takes space)
-            showToast('⚠️ Storage full. Removing oldest sessions...');
-            sessionHistory = sessionHistory.slice(0, 3);
-            localStorage.setItem('vocalProHistory', JSON.stringify(sessionHistory));
-        }
-
-        renderHistory();
-        showToast(`✅ Session saved — Score: ${score}%`);
-    }
-
-    // ─── MAIN DRAW LOOP ───
+    // ─── MAIN DRAW & ANALYZE LOOP ───
     function draw() {
         if (!isRecording) return;
         animFrame = requestAnimationFrame(draw);
 
-        analyser.getByteTimeDomainData(dataArray);
+        analyser.getFloatTimeDomainData(floatBuffer);
         analyser.getByteFrequencyData(freqArray);
 
-        // Calculate RMS → dB
-        let sum = 0;
-        for (let i = 0; i < dataArray.length; i++) {
-            const val = (dataArray[i] - 128) / 128;
-            sum += val * val;
+        // 1. Calculate RMS & dB
+        let sumSquares = 0;
+        for (let i = 0; i < floatBuffer.length; i++) {
+            sumSquares += floatBuffer[i] * floatBuffer[i];
         }
-        const rms = Math.sqrt(sum / dataArray.length);
+        const rms = Math.sqrt(sumSquares / floatBuffer.length);
         let db = 20 * Math.log10(rms + 0.0001);
-        db = Math.max(0, Math.min(100, db + 100)); // Normalize to 0-100
+        db = Math.max(0, Math.min(100, Math.round(db + 100)));
 
         dbHistory.push(db);
         if (db > peakDb) peakDb = db;
+        dbValueEl.textContent = db;
 
-        // Update dB Display
-        dbValueEl.textContent = Math.round(db);
-
-        // Color based on zone
-        let color, status;
+        // dB Zone color
+        let color, statusText;
         if (db < currentMode.min) {
-            color = 'var(--amber)'; status = 'TOO LOW';
-            dbValueEl.style.color = 'var(--amber)';
-            dbStatusEl.style.color = 'var(--amber)';
+            color = 'var(--amber)'; statusText = 'VOLUME LOW';
         } else if (db <= currentMode.max) {
-            color = 'var(--green)'; status = '✦ PERFECT ✦';
-            dbValueEl.style.color = 'var(--green)';
-            dbStatusEl.style.color = 'var(--green)';
+            color = 'var(--green)'; statusText = '✦ BALANCED ✦';
         } else {
-            color = 'var(--red)'; status = 'TOO LOUD';
-            dbValueEl.style.color = 'var(--red)';
-            dbStatusEl.style.color = 'var(--red)';
+            color = 'var(--red)'; statusText = 'TOO LOUD';
         }
-        dbStatusEl.textContent = status;
+        dbValueEl.style.color = color;
+        dbStatusEl.style.color = color;
+        dbStatusEl.textContent = statusText;
 
-        // Meter
-        const pct = Math.min(100, db);
-        meterFill.style.width = pct + '%';
-        meterFill.style.background = `linear-gradient(90deg, ${color}, ${color})`;
-        meterIndicator.style.left = pct + '%';
+        meterFill.style.width = db + '%';
+        meterFill.style.background = color;
 
-        // Stats
-        statMax.textContent = Math.round(peakDb);
+        // 2. Autocorrelation Pitch & Sur Detection
+        const pitch = detectFundamentalPitch(floatBuffer, audioCtx.sampleRate, rms);
+        if (pitch > 0) {
+            handlePitchIdentified(pitch);
+        }
+
+        // 3. Update Stats & Vocal Score
         const avg = dbHistory.length ? Math.round(dbHistory.reduce((a, b) => a + b, 0) / dbHistory.length) : 0;
+        statMax.textContent = Math.round(peakDb);
         statAvg.textContent = avg;
+
+        const surAccuracy = totalVoicedFrames > 5 ? Math.round((inSurFrames / totalVoicedFrames) * 100) : 0;
+        statSur.textContent = surAccuracy + '%';
+
         const elapsed = Date.now() - startTime;
         statTime.textContent = formatTime(elapsed);
 
-        // Score
-        const score = calcScore(avg);
-        scoreValue.textContent = score;
+        // Composite Vocal Score (Sur Accuracy + Dynamics)
+        const dbMid = (currentMode.min + currentMode.max) / 2;
+        const dbDeviation = Math.abs(avg - dbMid);
+        const dbScore = Math.max(0, 100 - (dbDeviation * 2.2));
+        const overallScore = totalVoicedFrames > 15 ? Math.round((surAccuracy * 0.6) + (dbScore * 0.4)) : 0;
+
+        scoreValue.textContent = overallScore;
         const circumference = 2 * Math.PI * 26;
-        const offset = circumference - (score / 100) * circumference;
-        scoreRing.style.strokeDashoffset = offset;
-        scoreRing.style.stroke = score >= 70 ? 'var(--green)' : score >= 40 ? 'var(--amber)' : 'var(--red)';
-        updateScoreInfo(score, avg);
+        scoreRing.style.strokeDashoffset = circumference - (overallScore / 100) * circumference;
+        scoreRing.style.stroke = overallScore >= 70 ? 'var(--green)' : overallScore >= 40 ? 'var(--amber)' : 'var(--red)';
+        updateScoreGuidance(overallScore, surAccuracy, avg);
 
-        // Draw visualization
-        drawVisualization(db);
+        // 4. Render Canvas Visualizer
+        renderVisualization(db);
     }
 
-    // ─── SCORE ───
-    function calcScore(avgDb) {
-        const mid = (currentMode.min + currentMode.max) / 2;
-        const range = (currentMode.max - currentMode.min) / 2;
-        const deviation = Math.abs(avgDb - mid);
-        const score = Math.max(0, Math.min(100, Math.round(100 - (deviation / range) * 50)));
-        return score;
+    // ─── AUTOCORRELATION PITCH DETECTOR ───
+    function detectFundamentalPitch(buffer, sampleRate, rms) {
+        if (rms < 0.015) return -1; // Silence gate
+
+        const minPeriod = Math.floor(sampleRate / 1100); // ~1100 Hz (C6)
+        const maxPeriod = Math.floor(sampleRate / 65);   // ~65 Hz (C2)
+
+        let bestPeriod = -1;
+        let bestCorrelation = -1;
+
+        // Optimized autocorrelation with stride of 2 for high performance
+        for (let period = minPeriod; period <= maxPeriod; period++) {
+            let corr = 0;
+            let count = 0;
+            for (let i = 0; i < buffer.length - period; i += 2) {
+                corr += buffer[i] * buffer[i + period];
+                count++;
+            }
+            corr = corr / count;
+
+            if (corr > bestCorrelation) {
+                bestCorrelation = corr;
+                bestPeriod = period;
+            }
+        }
+
+        if (bestPeriod > 0 && bestCorrelation > (rms * rms) * 0.35) {
+            return sampleRate / bestPeriod;
+        }
+        return -1;
     }
 
-    function updateScoreInfo(score, avgDb) {
-        if (score >= 80) {
-            scoreTitle.textContent = '🌟 Excellent!';
-            scoreDesc.textContent = 'Excellent! Your voice is perfectly in the ideal range.';
-            scoreTips.innerHTML = '<span class="score-tip">🎯 Perfect Range</span><span class="score-tip">✅ Keep Going</span>';
-        } else if (score >= 60) {
-            scoreTitle.textContent = '👍 Good';
-            scoreDesc.textContent = 'Good job! Slight adjustment needed to reach the ideal zone.';
-            scoreTips.innerHTML = avgDb < currentMode.min
-                ? '<span class="score-tip">⬆️ Increase Volume</span><span class="score-tip">🫁 Diaphragm Support</span>'
-                : '<span class="score-tip">⬇️ Soften Voice</span><span class="score-tip">🧘 Relax Your Throat</span>';
-        } else if (score >= 35) {
-            scoreTitle.textContent = '⚠️ Needs Work';
-            scoreDesc.textContent = 'Needs improvement — Try to bring your voice into the green zone.';
-            scoreTips.innerHTML = '<span class="score-tip">🎯 Focus on Range</span><span class="score-tip">🔄 Practice Scales</span>';
+    function handlePitchIdentified(freq) {
+        totalVoicedFrames++;
+        pitchHz.textContent = freq.toFixed(1) + ' Hz';
+
+        // Calculate note number (69 = A4 440Hz)
+        const noteNum = 12 * (Math.log(freq / 440) / Math.log(2)) + 69;
+        const midi = Math.round(noteNum);
+        const cents = Math.round((noteNum - midi) * 100); // -50 to +50
+        const noteIndex = (midi % 12 + 12) % 12;
+        const octave = Math.floor(midi / 12) - 1;
+
+        // Map note to relative Indian Classical Swara
+        const semitoneDiff = (noteIndex - rootKeyIndex + 12) % 12;
+        const swara = SWARA_TABLE[semitoneDiff];
+
+        swaraHindi.textContent = swara.hi;
+        swaraName.textContent = `${swara.name} (${NOTE_NAMES[noteIndex]}${octave})`;
+
+        // Position Needle (-50 cents = 0%, 0 cents = 50%, +50 cents = 100%)
+        const needlePos = Math.max(0, Math.min(100, (cents + 50)));
+        tunerNeedle.style.left = needlePos + '%';
+
+        if (Math.abs(cents) <= 12) {
+            inSurFrames++;
+            pitchSurState.textContent = '✦ सुर में (IN-TUNE) ✦';
+            pitchSurState.style.color = 'var(--green)';
+            tunerNeedle.style.background = 'var(--green)';
+            swaraHindi.style.color = 'var(--green)';
+        } else if (cents < -12) {
+            pitchSurState.textContent = `उतरा (FLAT) ${cents}¢`;
+            pitchSurState.style.color = 'var(--amber)';
+            tunerNeedle.style.background = 'var(--amber)';
+            swaraHindi.style.color = 'var(--amber)';
         } else {
-            scoreTitle.textContent = '🔴 Off Range';
-            scoreDesc.textContent = 'Try again — Your voice is far from the target range.';
-            scoreTips.innerHTML = '<span class="score-tip">📏 Check Distance</span><span class="score-tip">🎵 Warm Up First</span>';
+            pitchSurState.textContent = `चढ़ा (SHARP) +${cents}¢`;
+            pitchSurState.style.color = 'var(--red)';
+            tunerNeedle.style.background = 'var(--red)';
+            swaraHindi.style.color = 'var(--red)';
         }
     }
 
-    // ─── VISUALIZATION ───
-    function drawVisualization(db) {
+    // ─── VISUALIZERS ───
+    window.setVizMode = function(mode, btn) {
+        vizMode = mode;
+        document.querySelectorAll('.viz-pill').forEach(p => p.classList.remove('active'));
+        btn.classList.add('active');
+    };
+
+    function renderVisualization(db) {
         const w = vizCanvas.width / (window.devicePixelRatio || 2);
         const h = vizCanvas.height / (window.devicePixelRatio || 2);
         canvasCtx.clearRect(0, 0, w, h);
-        drawWaveform(w, h, db);
+
+        if (vizMode === 'waveform') {
+            drawWaveform(w, h, db);
+        } else if (vizMode === 'spectrum') {
+            drawSpectrum(w, h, db);
+        } else if (vizMode === 'circular') {
+            drawCircular(w, h, db);
+        }
     }
 
     function drawWaveform(w, h, db) {
-        const sliceWidth = w / dataArray.length;
+        const sliceWidth = w / floatBuffer.length;
         let x = 0;
-
-        // Glow
-        canvasCtx.shadowBlur = 15;
-        canvasCtx.shadowColor = db >= currentMode.min && db <= currentMode.max
-            ? 'rgba(0,230,118,0.5)' : db < currentMode.min
-            ? 'rgba(255,171,0,0.5)' : 'rgba(255,82,82,0.5)';
-
         canvasCtx.lineWidth = 2.5;
-        canvasCtx.strokeStyle = db >= currentMode.min && db <= currentMode.max
-            ? '#00e676' : db < currentMode.min ? '#ffab00' : '#ff5252';
+        canvasCtx.strokeStyle = db >= currentMode.min && db <= currentMode.max ? '#00e676' : '#6c5ce7';
         canvasCtx.beginPath();
 
-        for (let i = 0; i < dataArray.length; i++) {
-            const v = dataArray[i] / 128.0;
-            const y = (v * h) / 2;
-            if (i === 0) canvasCtx.moveTo(x, y);
-            else canvasCtx.lineTo(x, y);
-            x += sliceWidth;
-        }
-        canvasCtx.lineTo(w, h / 2);
-        canvasCtx.stroke();
-
-        // Mirror (faded)
-        canvasCtx.globalAlpha = 0.15;
-        canvasCtx.beginPath();
-        x = 0;
-        for (let i = 0; i < dataArray.length; i++) {
-            const v = dataArray[i] / 128.0;
-            const y = h - (v * h) / 2;
+        for (let i = 0; i < floatBuffer.length; i++) {
+            const v = floatBuffer[i];
+            const y = (0.5 + v * 0.75) * h;
             if (i === 0) canvasCtx.moveTo(x, y);
             else canvasCtx.lineTo(x, y);
             x += sliceWidth;
         }
         canvasCtx.stroke();
-        canvasCtx.globalAlpha = 1;
-        canvasCtx.shadowBlur = 0;
     }
 
     function drawSpectrum(w, h, db) {
-        const barCount = 64;
+        const barCount = 48;
         const barWidth = (w / barCount) - 2;
         let x = 0;
-        const step = Math.floor(bufferLength / barCount);
+        const step = Math.floor(freqArray.length / barCount);
 
         for (let i = 0; i < barCount; i++) {
             const val = freqArray[i * step];
             const barH = (val / 255) * h * 0.9;
-            const hue = (i / barCount) * 120 + 240;
-
-            const gradient = canvasCtx.createLinearGradient(0, h, 0, h - barH);
-            gradient.addColorStop(0, `hsla(${hue}, 80%, 50%, 0.8)`);
-            gradient.addColorStop(1, `hsla(${hue}, 80%, 70%, 0.4)`);
-
-            canvasCtx.fillStyle = gradient;
-            canvasCtx.shadowBlur = 8;
-            canvasCtx.shadowColor = `hsla(${hue}, 80%, 50%, 0.3)`;
-
-            canvasCtx.beginPath();
-            canvasCtx.roundRect(x, h - barH, barWidth, barH, [3, 3, 0, 0]);
-            canvasCtx.fill();
-
+            const hue = (i / barCount) * 120 + 180;
+            canvasCtx.fillStyle = `hsla(${hue}, 85%, 55%, 0.85)`;
+            canvasCtx.fillRect(x, h - barH, barWidth, barH);
             x += barWidth + 2;
         }
-        canvasCtx.shadowBlur = 0;
     }
 
     function drawCircular(w, h, db) {
         const cx = w / 2;
         const cy = h / 2;
         const radius = Math.min(cx, cy) * 0.55;
-        const bars = 72;
+        const bars = 48;
 
         for (let i = 0; i < bars; i++) {
             const angle = (i / bars) * Math.PI * 2;
-            const val = freqArray[Math.floor(i * bufferLength / bars)] || 0;
-            const barLen = (val / 255) * radius * 0.8 + 4;
-            const hue = (i / bars) * 360;
+            const val = freqArray[Math.floor(i * freqArray.length / bars)] || 0;
+            const barLen = (val / 255) * radius * 0.8 + 2;
 
             const x1 = cx + Math.cos(angle) * radius;
             const y1 = cy + Math.sin(angle) * radius;
@@ -1296,30 +1160,10 @@
             canvasCtx.beginPath();
             canvasCtx.moveTo(x1, y1);
             canvasCtx.lineTo(x2, y2);
-            canvasCtx.strokeStyle = `hsla(${hue}, 80%, 60%, 0.7)`;
+            canvasCtx.strokeStyle = `hsla(${i * 7}, 80%, 60%, 0.8)`;
             canvasCtx.lineWidth = 2.5;
-            canvasCtx.shadowBlur = 6;
-            canvasCtx.shadowColor = `hsla(${hue}, 80%, 50%, 0.3)`;
             canvasCtx.stroke();
         }
-
-        // Center circle
-        const grad = canvasCtx.createRadialGradient(cx, cy, 0, cx, cy, radius * 0.4);
-        grad.addColorStop(0, db >= currentMode.min && db <= currentMode.max
-            ? 'rgba(0,230,118,0.15)' : 'rgba(108,92,231,0.15)');
-        grad.addColorStop(1, 'transparent');
-        canvasCtx.fillStyle = grad;
-        canvasCtx.beginPath();
-        canvasCtx.arc(cx, cy, radius * 0.4, 0, Math.PI * 2);
-        canvasCtx.fill();
-
-        // dB text in center
-        canvasCtx.shadowBlur = 0;
-        canvasCtx.fillStyle = '#fff';
-        canvasCtx.font = `bold ${Math.round(radius * 0.35)}px Outfit`;
-        canvasCtx.textAlign = 'center';
-        canvasCtx.textBaseline = 'middle';
-        canvasCtx.fillText(Math.round(db) + ' dB', cx, cy);
     }
 
     function clearCanvas() {
@@ -1328,9 +1172,168 @@
         canvasCtx.clearRect(0, 0, w, h);
     }
 
+    // ─── ACOUSTIC TANPURA DRONE SYNTH ───
+    window.toggleTanpura = function() {
+        ensureAudioContext();
+        if (isTanpuraOn) {
+            stopTanpura();
+        } else {
+            startTanpura();
+        }
+    };
 
+    function startTanpura() {
+        const rootFreq = ROOT_FREQS[rootKeyIndex];
+        const paFreq = rootFreq * 1.4983; // Fifth (Pa)
+        const masterGain = audioCtx.createGain();
+        masterGain.gain.setValueAtTime(0.08, audioCtx.currentTime);
 
-    // ─── PRACTICE MODE ───
+        const filter = audioCtx.createBiquadFilter();
+        filter.type = 'lowpass';
+        filter.frequency.setValueAtTime(850, audioCtx.currentTime);
+
+        // 3 Harmonically tuned drone strings (Pa, Sa, Sa')
+        const freqs = [paFreq, rootFreq, rootFreq * 2];
+        const oscs = freqs.map(f => {
+            const osc = audioCtx.createOscillator();
+            osc.type = 'sawtooth';
+            osc.frequency.setValueAtTime(f, audioCtx.currentTime);
+            osc.connect(filter);
+            osc.start();
+            return osc;
+        });
+
+        filter.connect(masterGain);
+        masterGain.connect(audioCtx.destination);
+
+        tanpuraNodes = { oscs, masterGain };
+        isTanpuraOn = true;
+        tanpuraBtn.classList.add('active');
+        showToast('🪕 Tanpura Drone started on ' + NOTE_NAMES[rootKeyIndex]);
+    }
+
+    function stopTanpura() {
+        if (tanpuraNodes) {
+            tanpuraNodes.oscs.forEach(o => o.stop());
+            tanpuraNodes.masterGain.disconnect();
+            tanpuraNodes = null;
+        }
+        isTanpuraOn = false;
+        tanpuraBtn.classList.remove('active');
+    }
+
+    window.changeRootKey = function(val) {
+        rootKeyIndex = parseInt(val);
+        if (isTanpuraOn) {
+            stopTanpura();
+            startTanpura();
+        }
+        showToast(`🎵 Root Key set to: ${NOTE_NAMES[rootKeyIndex]} (सा)`);
+    };
+
+    // ─── RIYAZ FEEDBACK GUIDANCE ───
+    function updateScoreGuidance(score, surAcc, avgDb) {
+        if (score >= 80) {
+            scoreTitle.textContent = '🌟 Shandaar (शानदार)!';
+            scoreDesc.textContent = 'Outstanding! Perfect Sur stability and excellent volume balance.';
+            scoreTips.innerHTML = '<span class="score-tip">🎯 Sur Stabilized</span><span class="score-tip">✅ Riyaz Ready</span>';
+        } else if (score >= 55) {
+            scoreTitle.textContent = '👍 Achha Riyaz (अच्छा प्रयास)';
+            scoreDesc.textContent = 'Good control! Minor pitch fluctuation detected—focus on breath support.';
+            scoreTips.innerHTML = surAcc < 60
+                ? '<span class="score-tip">🫁 Hold Notes Longer</span><span class="score-tip">👂 Listen to Tanpura</span>'
+                : '<span class="score-tip">🎤 Maintain Mic Distance</span>';
+        } else {
+            scoreTitle.textContent = '⚠️ Focus on Sur (सुर अभ्यास)';
+            scoreDesc.textContent = 'Try matching your vocal tone with the Tanpura drone.';
+            scoreTips.innerHTML = '<span class="score-tip">🪕 Align with Sa (सा)</span><span class="score-tip">🧘 Relax Throat</span>';
+        }
+    }
+
+    // ─── SESSIONS STORAGE (INDEXED-DB) ───
+    function saveCompletedSession() {
+        if (dbHistory.length < 10) return;
+
+        const avgDb = Math.round(dbHistory.reduce((a, b) => a + b, 0) / dbHistory.length);
+        const surAcc = totalVoicedFrames > 5 ? Math.round((inSurFrames / totalVoicedFrames) * 100) : 0;
+        const elapsed = Date.now() - startTime;
+        const finalScore = parseInt(scoreValue.textContent) || 0;
+
+        let audioBlob = null;
+        if (recordedChunks.length > 0) {
+            audioBlob = new Blob(recordedChunks, { type: recordedChunks[0].type || 'audio/webm' });
+        }
+
+        const session = {
+            mode: currentMode.name,
+            root: NOTE_NAMES[rootKeyIndex],
+            avgDb,
+            peakDb: Math.round(peakDb),
+            surAcc,
+            score: finalScore,
+            duration: formatTime(elapsed),
+            time: new Date().toLocaleTimeString('hi-IN', { hour: '2-digit', minute: '2-digit' }),
+            audioBlob: audioBlob
+        };
+
+        if (dbInstance) {
+            const tx = dbInstance.transaction('sessions', 'readwrite');
+            tx.objectStore('sessions').add(session);
+            tx.oncomplete = () => {
+                loadHistoryFromDB();
+                showToast(`✅ Session saved! Score: ${finalScore}%`);
+            };
+        }
+    }
+
+    function loadHistoryFromDB() {
+        if (!dbInstance) return;
+        const tx = dbInstance.transaction('sessions', 'readonly');
+        const req = tx.objectStore('sessions').getAll();
+        req.onsuccess = () => {
+            const sessions = req.result.reverse();
+            renderHistoryUI(sessions);
+        };
+    }
+
+    function renderHistoryUI(sessions) {
+        if (!sessions || sessions.length === 0) {
+            historyList.innerHTML = `<div style="text-align:center;color:var(--text-muted);font-size:13px;padding:12px;">No sessions saved yet.</div>`;
+            return;
+        }
+
+        historyList.innerHTML = sessions.map(s => {
+            const audioUrl = s.audioBlob ? URL.createObjectURL(s.audioBlob) : null;
+            return `
+                <div class="history-item">
+                    <div class="hi-top">
+                        <div>
+                            <div class="hi-mode">${s.mode} (${s.root})</div>
+                            <div class="hi-meta">${s.time} · ${s.duration} · Sur: ${s.surAcc}% · Avg: ${s.avgDb} dB</div>
+                        </div>
+                        <div class="hi-score" style="color:${s.score >= 70 ? 'var(--green)' : s.score >= 45 ? 'var(--amber)' : 'var(--red)'}">${s.score}%</div>
+                    </div>
+                    ${audioUrl ? `
+                        <div class="hi-audio-row">
+                            <audio class="history-player" controls src="${audioUrl}"></audio>
+                            <a class="download-btn" href="${audioUrl}" download="vocal-riyaz-${s.time}.webm">⬇️</a>
+                        </div>
+                    ` : ''}
+                </div>
+            `;
+        }).join('');
+    }
+
+    window.clearAllHistory = function() {
+        if (!dbInstance) return;
+        const tx = dbInstance.transaction('sessions', 'readwrite');
+        tx.objectStore('sessions').clear();
+        tx.oncomplete = () => {
+            loadHistoryFromDB();
+            showToast('🗑️ All history cleared');
+        };
+    };
+
     window.selectMode = function(card) {
         document.querySelectorAll('.mode-card').forEach(c => c.classList.remove('active-mode'));
         card.classList.add('active-mode');
@@ -1339,63 +1342,9 @@
             max: parseInt(card.dataset.max),
             name: card.dataset.name
         };
-        showToast(`🎵 Mode: ${currentMode.name} (${currentMode.min}–${currentMode.max} dB)`);
+        showToast(`Mode: ${currentMode.name} (${currentMode.min}–${currentMode.max} dB)`);
     };
 
-    // ─── HISTORY ───
-    function renderHistory() {
-        if (!sessionHistory.length) {
-            historyList.innerHTML = `<div class="history-item" style="justify-content:center;">
-                <span style="color:var(--text-muted);font-size:13px;">No sessions yet — start practicing!</span>
-            </div>`;
-            return;
-        }
-        historyList.innerHTML = sessionHistory.map(s => `
-            <div class="history-item" style="flex-direction:column; align-items:stretch;">
-                <div style="display:flex; justify-content:space-between; align-items:center;">
-                    <div class="hi-left">
-                        <span class="hi-mode">${s.mode}</span>
-                        <span class="hi-time">${s.time} · ${s.duration} · Avg ${s.avgDb} dB · Peak ${s.peakDb} dB</span>
-                    </div>
-                    <span class="hi-score" style="color:${s.score >= 70 ? 'var(--green)' : s.score >= 40 ? 'var(--amber)' : 'var(--red)'}">${s.score}%</span>
-                </div>
-                ${s.audioUrl ? `<audio class="history-player" controls src="${s.audioUrl}"></audio>` : ''}
-            </div>
-        `).join('');
-    }
-
-    // ─── RESET SESSIONS ───
-    window.resetSessions = function() {
-        if (!sessionHistory.length) {
-            showToast('📋 No sessions to reset');
-            return;
-        }
-        sessionHistory = [];
-        localStorage.removeItem('vocalProHistory');
-        renderHistory();
-
-        // Reset stats display
-        statMax.textContent = '0';
-        statAvg.textContent = '0';
-        statTime.textContent = '0:00';
-        dbValueEl.textContent = '0';
-        dbStatusEl.textContent = 'READY';
-        dbValueEl.style.color = '';
-        dbStatusEl.style.color = '';
-        meterFill.style.width = '0%';
-        meterIndicator.style.left = '0%';
-        scoreValue.textContent = '0';
-        scoreRing.style.strokeDashoffset = 163;
-        scoreTitle.textContent = 'Vocal Score';
-        scoreDesc.textContent = 'Start singing to get your real-time vocal score.';
-        scoreTips.innerHTML = '';
-        peakDb = 0;
-        dbHistory = [];
-
-        showToast('🗑️ All sessions cleared!');
-    };
-
-    // ─── UTILS ───
     function formatTime(ms) {
         const s = Math.floor(ms / 1000);
         const m = Math.floor(s / 60);
@@ -1406,7 +1355,7 @@
         const toast = document.getElementById('toast');
         toast.textContent = msg;
         toast.classList.add('show');
-        setTimeout(() => toast.classList.remove('show'), 2500);
+        setTimeout(() => toast.classList.remove('show'), 2400);
     }
 
 })();
