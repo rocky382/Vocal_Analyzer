@@ -3,11 +3,99 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    
+    <!-- ─── iOS Safari & PWA Home Screen Configuration ─── -->
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Vocal Pro">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="theme-color" content="#0a0a1a">
+    <meta name="application-name" content="Vocal Pro">
     <meta name="description" content="Professional Hindi vocal analyzer with real-time Swara, Pitch & dB analysis for singers">
     <title>🎤 Vocal Pro - Hindi Singer Analyzer</title>
+
+    <!-- Pre-declared Icon Links (Populated instantly via the script below) -->
+    <link rel="apple-touch-icon" id="appleTouchIcon" sizes="180x180">
+    <link rel="apple-touch-icon-precomposed" id="appleTouchIconPre">
+    <link rel="icon" id="appFavicon" type="image/png">
+    <link rel="manifest" id="appManifest">
+
+    <!-- ─── Self-Contained 180x180 PNG Icon Generator for iOS ─── -->
+    <script>
+    (function() {
+        try {
+            var size = 180;
+            var c = document.createElement('canvas');
+            c.width = size;
+            c.height = size;
+            var ctx = c.getContext('2d');
+
+            // 1. Opaque Deep Cosmic Navy Background (iOS requires 100% opaque)
+            var bg = ctx.createLinearGradient(0, 0, size, size);
+            bg.addColorStop(0, '#0d0d26');
+            bg.addColorStop(0.5, '#171542');
+            bg.addColorStop(1, '#080816');
+            ctx.fillStyle = bg;
+            ctx.fillRect(0, 0, size, size);
+
+            // 2. Vibrant Outer Glow Ring
+            ctx.shadowColor = '#6c5ce7';
+            ctx.shadowBlur = 16;
+            ctx.strokeStyle = '#8b5cf6';
+            ctx.lineWidth = 5;
+            ctx.beginPath();
+            ctx.arc(size / 2, size / 2, 74, 0, Math.PI * 2);
+            ctx.stroke();
+            ctx.shadowBlur = 0;
+
+            // 3. Inner Radial Glow
+            var rad = ctx.createRadialGradient(size / 2, size / 2, 10, size / 2, size / 2, 70);
+            rad.addColorStop(0, 'rgba(108, 92, 231, 0.45)');
+            rad.addColorStop(0.7, 'rgba(24, 255, 255, 0.12)');
+            rad.addColorStop(1, 'rgba(0, 0, 0, 0)');
+            ctx.fillStyle = rad;
+            ctx.beginPath();
+            ctx.arc(size / 2, size / 2, 70, 0, Math.PI * 2);
+            ctx.fill();
+
+            // 4. Center Microphone Glyph
+            ctx.font = '72px -apple-system, sans-serif';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText('🎤', size / 2, size / 2 - 8);
+
+            // 5. 'VOCAL PRO' Text
+            ctx.fillStyle = '#00e676';
+            ctx.font = '900 16px -apple-system, BlinkMacSystemFont, "Outfit", sans-serif';
+            ctx.fillText('VOCAL PRO', size / 2, size - 22);
+
+            var iconPng = c.toDataURL('image/png');
+
+            // Set iOS Touch Icon and Favicon URLs
+            document.getElementById('appleTouchIcon').href = iconPng;
+            document.getElementById('appleTouchIconPre').href = iconPng;
+            document.getElementById('appFavicon').href = iconPng;
+
+            // Generate PWA Web App Manifest dynamically
+            var manifest = {
+                name: "Vocal Pro - Hindi Singer Analyzer",
+                short_name: "Vocal Pro",
+                start_url: window.location.href,
+                display: "standalone",
+                background_color: "#0a0a1a",
+                theme_color: "#0a0a1a",
+                icons: [
+                    { src: iconPng, sizes: "180x180", type: "image/png", purpose: "any maskable" }
+                ]
+            };
+            var blob = new Blob([JSON.stringify(manifest)], { type: 'application/manifest+json' });
+            document.getElementById('appManifest').href = URL.createObjectURL(blob);
+        } catch (e) {
+            console.warn('Icon generator:', e);
+        }
+    })();
+    </script>
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Noto+Sans+Devanagari:wght@400;600;700;800&display=swap" rel="stylesheet">
     <style>
@@ -111,7 +199,7 @@
             margin-top: 2px;
         }
 
-        /* ─── TANPURA & ROOT SCALE CONTROLS ─── */
+        /* ─── RIYAZ BAR: ROOT KEY & TANPURA ─── */
         .riyaz-bar {
             display: flex;
             align-items: center;
@@ -282,9 +370,7 @@
             font-weight: 700;
             color: var(--text-secondary);
         }
-        .pitch-details {
-            text-align: right;
-        }
+        .pitch-details { text-align: right; }
         .pitch-hz {
             font-size: 20px;
             font-weight: 800;
@@ -759,7 +845,6 @@
         { hi: 'नि', en: 'Ni', name: 'Shuddha Nishad (शुद्ध नि)' }
     ];
 
-    // Standard Tonic Frequencies (Octave 3)
     const ROOT_FREQS = [130.81, 138.59, 146.83, 155.56, 164.81, 174.61, 185.00, 196.00, 207.65, 220.00, 233.08, 246.94];
 
     // ─── STATE ───
@@ -771,7 +856,7 @@
     let startTime = 0;
 
     let vizMode = 'waveform';
-    let rootKeyIndex = 1; // Default C# (काली 1)
+    let rootKeyIndex = 1; // C# (काली 1)
     let currentMode = { min: 40, max: 65, name: 'Normal Singing' };
 
     let dbHistory = [];
@@ -779,12 +864,10 @@
     let totalVoicedFrames = 0;
     let peakDb = 0;
 
-    // MediaRecorder & IndexedDB
     let mediaRecorder = null;
     let recordedChunks = [];
     let dbInstance = null;
 
-    // Tanpura Drone Synth State
     let isTanpuraOn = false;
     let tanpuraNodes = null;
 
@@ -817,7 +900,7 @@
     const historyList = document.getElementById('historyList');
     const tanpuraBtn = document.getElementById('tanpuraBtn');
 
-    // ─── INDEXED-DB SETUP (Unlimited reliable Audio Storage) ───
+    // ─── INDEXED-DB SETUP ───
     function initDB() {
         return new Promise((resolve) => {
             const req = indexedDB.open('VocalProRecordingsDB', 1);
@@ -847,7 +930,6 @@
         canvasCtx.scale(window.devicePixelRatio || 2, window.devicePixelRatio || 2);
     }
 
-    // ─── AUDIO CONTEXT INIT ───
     function ensureAudioContext() {
         if (!audioCtx) {
             audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -892,7 +974,6 @@
         totalVoicedFrames = 0;
         peakDb = 0;
 
-        // Init MediaRecorder
         recordedChunks = [];
         try {
             const mime = MediaRecorder.isTypeSupported('audio/webm') ? 'audio/webm' : 'audio/mp4';
@@ -933,7 +1014,6 @@
         micLabel.textContent = 'TAP TO START RIYAZ';
         dbStatusEl.textContent = 'PAUSED';
 
-        // Clear tuner
         swaraHindi.textContent = '—';
         swaraName.textContent = 'Sing to detect Sur';
         pitchHz.textContent = '0.0 Hz';
@@ -952,7 +1032,7 @@
         analyser.getFloatTimeDomainData(floatBuffer);
         analyser.getByteFrequencyData(freqArray);
 
-        // 1. Calculate RMS & dB
+        // 1. RMS & dB
         let sumSquares = 0;
         for (let i = 0; i < floatBuffer.length; i++) {
             sumSquares += floatBuffer[i] * floatBuffer[i];
@@ -965,7 +1045,6 @@
         if (db > peakDb) peakDb = db;
         dbValueEl.textContent = db;
 
-        // dB Zone color
         let color, statusText;
         if (db < currentMode.min) {
             color = 'var(--amber)'; statusText = 'VOLUME LOW';
@@ -981,13 +1060,13 @@
         meterFill.style.width = db + '%';
         meterFill.style.background = color;
 
-        // 2. Autocorrelation Pitch & Sur Detection
+        // 2. Pitch Detection
         const pitch = detectFundamentalPitch(floatBuffer, audioCtx.sampleRate, rms);
         if (pitch > 0) {
             handlePitchIdentified(pitch);
         }
 
-        // 3. Update Stats & Vocal Score
+        // 3. Stats & Score
         const avg = dbHistory.length ? Math.round(dbHistory.reduce((a, b) => a + b, 0) / dbHistory.length) : 0;
         statMax.textContent = Math.round(peakDb);
         statAvg.textContent = avg;
@@ -998,7 +1077,6 @@
         const elapsed = Date.now() - startTime;
         statTime.textContent = formatTime(elapsed);
 
-        // Composite Vocal Score (Sur Accuracy + Dynamics)
         const dbMid = (currentMode.min + currentMode.max) / 2;
         const dbDeviation = Math.abs(avg - dbMid);
         const dbScore = Math.max(0, 100 - (dbDeviation * 2.2));
@@ -1010,21 +1088,18 @@
         scoreRing.style.stroke = overallScore >= 70 ? 'var(--green)' : overallScore >= 40 ? 'var(--amber)' : 'var(--red)';
         updateScoreGuidance(overallScore, surAccuracy, avg);
 
-        // 4. Render Canvas Visualizer
         renderVisualization(db);
     }
 
-    // ─── AUTOCORRELATION PITCH DETECTOR ───
     function detectFundamentalPitch(buffer, sampleRate, rms) {
-        if (rms < 0.015) return -1; // Silence gate
+        if (rms < 0.015) return -1;
 
-        const minPeriod = Math.floor(sampleRate / 1100); // ~1100 Hz (C6)
-        const maxPeriod = Math.floor(sampleRate / 65);   // ~65 Hz (C2)
+        const minPeriod = Math.floor(sampleRate / 1100);
+        const maxPeriod = Math.floor(sampleRate / 65);
 
         let bestPeriod = -1;
         let bestCorrelation = -1;
 
-        // Optimized autocorrelation with stride of 2 for high performance
         for (let period = minPeriod; period <= maxPeriod; period++) {
             let corr = 0;
             let count = 0;
@@ -1050,21 +1125,18 @@
         totalVoicedFrames++;
         pitchHz.textContent = freq.toFixed(1) + ' Hz';
 
-        // Calculate note number (69 = A4 440Hz)
         const noteNum = 12 * (Math.log(freq / 440) / Math.log(2)) + 69;
         const midi = Math.round(noteNum);
-        const cents = Math.round((noteNum - midi) * 100); // -50 to +50
+        const cents = Math.round((noteNum - midi) * 100);
         const noteIndex = (midi % 12 + 12) % 12;
         const octave = Math.floor(midi / 12) - 1;
 
-        // Map note to relative Indian Classical Swara
         const semitoneDiff = (noteIndex - rootKeyIndex + 12) % 12;
         const swara = SWARA_TABLE[semitoneDiff];
 
         swaraHindi.textContent = swara.hi;
         swaraName.textContent = `${swara.name} (${NOTE_NAMES[noteIndex]}${octave})`;
 
-        // Position Needle (-50 cents = 0%, 0 cents = 50%, +50 cents = 100%)
         const needlePos = Math.max(0, Math.min(100, (cents + 50)));
         tunerNeedle.style.left = needlePos + '%';
 
@@ -1184,7 +1256,7 @@
 
     function startTanpura() {
         const rootFreq = ROOT_FREQS[rootKeyIndex];
-        const paFreq = rootFreq * 1.4983; // Fifth (Pa)
+        const paFreq = rootFreq * 1.4983;
         const masterGain = audioCtx.createGain();
         masterGain.gain.setValueAtTime(0.08, audioCtx.currentTime);
 
@@ -1192,7 +1264,6 @@
         filter.type = 'lowpass';
         filter.frequency.setValueAtTime(850, audioCtx.currentTime);
 
-        // 3 Harmonically tuned drone strings (Pa, Sa, Sa')
         const freqs = [paFreq, rootFreq, rootFreq * 2];
         const oscs = freqs.map(f => {
             const osc = audioCtx.createOscillator();
