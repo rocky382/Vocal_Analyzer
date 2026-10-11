@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     
-    <!-- ─── iOS Safari & PWA Home Screen Configuration ─── -->
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Vocal Pro">
@@ -14,31 +13,24 @@
     <meta name="description" content="Professional Hindi vocal analyzer with real-time Swara, Pitch & dB analysis for singers">
     <title>🎤 Vocal Pro - Hindi Singer Analyzer</title>
 
-    <!-- Pre-declared Icon Links (Populated instantly via the script below) -->
     <link rel="apple-touch-icon" id="appleTouchIcon" sizes="180x180">
     <link rel="apple-touch-icon-precomposed" id="appleTouchIconPre">
     <link rel="icon" id="appFavicon" type="image/png">
     <link rel="manifest" id="appManifest">
 
-    <!-- ─── Self-Contained 180x180 PNG Icon Generator for iOS ─── -->
     <script>
     (function() {
         try {
             var size = 180;
             var c = document.createElement('canvas');
-            c.width = size;
-            c.height = size;
+            c.width = size; c.height = size;
             var ctx = c.getContext('2d');
-
-            // 1. Opaque Deep Cosmic Navy Background (iOS requires 100% opaque)
             var bg = ctx.createLinearGradient(0, 0, size, size);
             bg.addColorStop(0, '#0d0d26');
             bg.addColorStop(0.5, '#171542');
             bg.addColorStop(1, '#080816');
             ctx.fillStyle = bg;
             ctx.fillRect(0, 0, size, size);
-
-            // 2. Vibrant Outer Glow Ring
             ctx.shadowColor = '#6c5ce7';
             ctx.shadowBlur = 16;
             ctx.strokeStyle = '#8b5cf6';
@@ -47,8 +39,6 @@
             ctx.arc(size / 2, size / 2, 74, 0, Math.PI * 2);
             ctx.stroke();
             ctx.shadowBlur = 0;
-
-            // 3. Inner Radial Glow
             var rad = ctx.createRadialGradient(size / 2, size / 2, 10, size / 2, size / 2, 70);
             rad.addColorStop(0, 'rgba(108, 92, 231, 0.45)');
             rad.addColorStop(0.7, 'rgba(24, 255, 255, 0.12)');
@@ -57,26 +47,17 @@
             ctx.beginPath();
             ctx.arc(size / 2, size / 2, 70, 0, Math.PI * 2);
             ctx.fill();
-
-            // 4. Center Microphone Glyph
             ctx.font = '72px -apple-system, sans-serif';
             ctx.textAlign = 'center';
             ctx.textBaseline = 'middle';
             ctx.fillText('🎤', size / 2, size / 2 - 8);
-
-            // 5. 'VOCAL PRO' Text
             ctx.fillStyle = '#00e676';
             ctx.font = '900 16px -apple-system, BlinkMacSystemFont, "Outfit", sans-serif';
             ctx.fillText('VOCAL PRO', size / 2, size - 22);
-
             var iconPng = c.toDataURL('image/png');
-
-            // Set iOS Touch Icon and Favicon URLs
             document.getElementById('appleTouchIcon').href = iconPng;
             document.getElementById('appleTouchIconPre').href = iconPng;
             document.getElementById('appFavicon').href = iconPng;
-
-            // Generate PWA Web App Manifest dynamically
             var manifest = {
                 name: "Vocal Pro - Hindi Singer Analyzer",
                 short_name: "Vocal Pro",
@@ -84,15 +65,11 @@
                 display: "standalone",
                 background_color: "#0a0a1a",
                 theme_color: "#0a0a1a",
-                icons: [
-                    { src: iconPng, sizes: "180x180", type: "image/png", purpose: "any maskable" }
-                ]
+                icons: [{ src: iconPng, sizes: "180x180", type: "image/png", purpose: "any maskable" }]
             };
             var blob = new Blob([JSON.stringify(manifest)], { type: 'application/manifest+json' });
             document.getElementById('appManifest').href = URL.createObjectURL(blob);
-        } catch (e) {
-            console.warn('Icon generator:', e);
-        }
+        } catch (e) { console.warn('Icon generator:', e); }
     })();
     </script>
 
@@ -136,10 +113,8 @@
         body::before {
             content: '';
             position: fixed;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
+            top: -50%; left: -50%;
+            width: 200%; height: 200%;
             background: radial-gradient(ellipse at 30% 20%, rgba(108,92,231,0.09) 0%, transparent 50%),
                         radial-gradient(ellipse at 70% 80%, rgba(0,230,118,0.06) 0%, transparent 50%),
                         radial-gradient(ellipse at 50% 50%, rgba(24,255,255,0.04) 0%, transparent 60%);
@@ -165,7 +140,6 @@
             gap: 14px;
         }
 
-        /* ─── HEADER ─── */
         .header { text-align: center; }
         .header .logo {
             font-size: 12px;
@@ -180,8 +154,7 @@
         }
         .header .logo::before, .header .logo::after {
             content: '';
-            width: 20px;
-            height: 1px;
+            width: 20px; height: 1px;
             background: linear-gradient(90deg, transparent, var(--accent-secondary));
         }
         .header .logo::after { background: linear-gradient(90deg, var(--accent-secondary), transparent); }
@@ -193,29 +166,25 @@
             -webkit-text-fill-color: transparent;
             margin-top: 2px;
         }
-        .header .subtitle {
-            color: var(--text-secondary);
-            font-size: 14px;
-            margin-top: 2px;
-        }
+        .header .subtitle { color: var(--text-secondary); font-size: 14px; margin-top: 2px; }
 
-        /* ─── RIYAZ BAR: ROOT KEY & TANPURA ─── */
         .riyaz-bar {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            gap: 8px;
+            gap: 6px;
             background: var(--bg-card);
             border: 1px solid var(--border);
             border-radius: 12px;
-            padding: 8px 12px;
+            padding: 8px 10px;
             backdrop-filter: blur(12px);
+            flex-wrap: wrap;
         }
         .scale-selector {
             display: flex;
             align-items: center;
-            gap: 8px;
-            font-size: 13px;
+            gap: 6px;
+            font-size: 12px;
             color: var(--text-secondary);
             font-weight: 600;
         }
@@ -224,36 +193,52 @@
             color: #fff;
             border: 1px solid var(--border);
             border-radius: 8px;
-            padding: 6px 10px;
+            padding: 5px 8px;
             font-family: inherit;
-            font-size: 13px;
+            font-size: 12px;
             font-weight: 700;
             outline: none;
             cursor: pointer;
+            max-width: 140px;
         }
         .scale-select option { background: var(--bg-secondary); color: #fff; }
-        .tanpura-btn {
+
+        .riyaz-actions { display: flex; gap: 6px; align-items: center; }
+
+        .pill-btn {
             background: rgba(108,92,231,0.15);
             border: 1px solid rgba(108,92,231,0.3);
             color: var(--accent-secondary);
-            padding: 6px 12px;
+            padding: 6px 10px;
             border-radius: 8px;
             font-family: inherit;
-            font-size: 13px;
+            font-size: 12px;
             font-weight: 700;
             cursor: pointer;
             display: flex;
             align-items: center;
-            gap: 6px;
+            gap: 4px;
             transition: all 0.2s;
+            white-space: nowrap;
         }
-        .tanpura-btn.active {
+        .pill-btn.active {
             background: linear-gradient(135deg, var(--accent-primary), #8b5cf6);
             color: #fff;
             box-shadow: 0 0 15px var(--accent-glow);
         }
+        .pill-btn.cal-btn {
+            background: rgba(0,230,118,0.12);
+            border-color: rgba(0,230,118,0.3);
+            color: var(--green);
+        }
+        .pill-btn.cal-btn.calibrating {
+            animation: pulse-cal 1s infinite;
+        }
+        @keyframes pulse-cal {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(0,230,118,0.5); }
+            50% { box-shadow: 0 0 0 10px rgba(0,230,118,0); }
+        }
 
-        /* ─── VISUALIZER WRAPPER ─── */
         .viz-box {
             background: var(--bg-card);
             border: 1px solid var(--border);
@@ -264,11 +249,7 @@
             gap: 8px;
             backdrop-filter: blur(10px);
         }
-        .viz-controls {
-            display: flex;
-            justify-content: center;
-            gap: 6px;
-        }
+        .viz-controls { display: flex; justify-content: center; gap: 6px; }
         .viz-pill {
             background: transparent;
             border: 1px solid var(--border);
@@ -296,17 +277,10 @@
         }
         .wave-strip canvas { width: 100%; height: 100%; display: block; }
 
-        /* ─── MIC BUTTON ─── */
-        .mic-section {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            margin: 4px 0;
-        }
+        .mic-section { display: flex; flex-direction: column; align-items: center; margin: 4px 0; }
         .mic-btn {
             position: relative;
-            width: 78px;
-            height: 78px;
+            width: 78px; height: 78px;
             border-radius: 50%;
             border: none;
             cursor: pointer;
@@ -337,7 +311,6 @@
             letter-spacing: 1px;
         }
 
-        /* ─── PITCH & SUR DISPLAY CARD ─── */
         .pitch-card {
             background: var(--bg-card);
             border: 1px solid var(--border);
@@ -348,16 +321,8 @@
             gap: 10px;
             backdrop-filter: blur(12px);
         }
-        .pitch-top {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .swara-badge {
-            display: flex;
-            align-items: baseline;
-            gap: 6px;
-        }
+        .pitch-top { display: flex; justify-content: space-between; align-items: center; }
+        .swara-badge { display: flex; align-items: baseline; gap: 6px; flex-wrap: wrap; }
         .swara-hindi {
             font-size: 38px;
             font-weight: 800;
@@ -365,10 +330,16 @@
             color: var(--cyan);
             line-height: 1;
         }
-        .swara-name {
-            font-size: 16px;
+        .swara-name { font-size: 14px; font-weight: 700; color: var(--text-secondary); }
+        .saptak-badge {
+            font-size: 11px;
             font-weight: 700;
-            color: var(--text-secondary);
+            padding: 2px 8px;
+            border-radius: 6px;
+            background: rgba(24,255,255,0.12);
+            color: var(--cyan);
+            border: 1px solid rgba(24,255,255,0.25);
+            font-family: 'Noto Sans Devanagari', sans-serif;
         }
         .pitch-details { text-align: right; }
         .pitch-hz {
@@ -377,13 +348,12 @@
             font-variant-numeric: tabular-nums;
         }
         .pitch-sur-state {
-            font-size: 13px;
+            font-size: 12px;
             font-weight: 700;
             letter-spacing: 0.5px;
             color: var(--text-muted);
         }
 
-        /* Tuner Gauge */
         .tuner-gauge-track {
             height: 10px;
             border-radius: 5px;
@@ -393,7 +363,7 @@
             overflow: hidden;
         }
         .tuner-zone-flat { flex: 1; background: linear-gradient(90deg, transparent, rgba(255,171,0,0.25)); }
-        .tuner-zone-sur { width: 18%; background: rgba(0,230,118,0.4); }
+        .tuner-zone-sur { width: 24%; background: rgba(0,230,118,0.4); }
         .tuner-zone-sharp { flex: 1; background: linear-gradient(90deg, rgba(255,82,82,0.25), transparent); }
         .tuner-needle {
             position: absolute;
@@ -416,7 +386,6 @@
             text-transform: uppercase;
         }
 
-        /* ─── dB METER ─── */
         .db-card {
             background: var(--bg-card);
             border: 1px solid var(--border);
@@ -424,12 +393,7 @@
             padding: 14px 16px;
             text-align: center;
         }
-        .db-val-wrap {
-            display: flex;
-            align-items: baseline;
-            justify-content: center;
-            gap: 2px;
-        }
+        .db-val-wrap { display: flex; align-items: baseline; justify-content: center; gap: 2px; }
         .db-value {
             font-size: 56px;
             font-weight: 900;
@@ -458,17 +422,18 @@
             display: flex;
             border-radius: 6px;
         }
-        .meter-zone.low { flex: 0.35; background: var(--amber); opacity: 0.15; }
-        .meter-zone.good { flex: 0.40; background: var(--green); opacity: 0.15; }
-        .meter-zone.high { flex: 0.25; background: var(--red); opacity: 0.15; }
+        .meter-zone.low { flex: 72; background: var(--amber); opacity: 0.15; }
+        .meter-zone.good { flex: 16; background: var(--green); opacity: 0.15; }
+        .meter-zone.high { flex: 12; background: var(--red); opacity: 0.15; }
         .meter-fill {
             height: 100%;
             border-radius: 6px;
             width: 0%;
             transition: width 0.08s linear;
+            position: relative;
+            z-index: 1;
         }
 
-        /* ─── PRACTICE MODES ─── */
         .practice-modes {
             display: flex;
             gap: 8px;
@@ -495,7 +460,6 @@
         .mode-card .mode-name { font-size: 13px; font-weight: 700; }
         .mode-card .mode-range { font-size: 11px; font-weight: 700; color: var(--accent-secondary); margin-top: 4px; }
 
-        /* ─── STATS GRID ─── */
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
@@ -522,7 +486,6 @@
             text-transform: uppercase;
         }
 
-        /* ─── VOCAL SCORE CARD ─── */
         .score-card {
             background: linear-gradient(135deg, rgba(108,92,231,0.12) 0%, rgba(0,230,118,0.08) 100%);
             border: 1px solid rgba(108,92,231,0.25);
@@ -566,7 +529,6 @@
             font-weight: 600;
         }
 
-        /* ─── HISTORY ─── */
         .history-section { display: flex; flex-direction: column; gap: 8px; }
         .history-header { display: flex; justify-content: space-between; align-items: center; }
         .section-title { font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--text-secondary); }
@@ -609,11 +571,9 @@
             align-items: center;
         }
 
-        /* ─── FOOTER ─── */
         .footer { text-align: center; font-size: 12px; color: var(--text-muted); padding: 8px 0; }
         .footer span { color: var(--cyan); font-weight: 700; }
 
-        /* ─── TOAST ─── */
         .toast {
             position: fixed;
             top: calc(var(--safe-top) + 12px);
@@ -629,6 +589,8 @@
             z-index: 999;
             transition: transform 0.3s ease;
             box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+            max-width: 90vw;
+            text-align: center;
         }
         .toast.show { transform: translateX(-50%) translateY(0); }
     </style>
@@ -639,18 +601,17 @@
 
 <div class="app-container">
 
-    <!-- HEADER -->
     <div class="header">
         <div class="logo">Vocal Pro</div>
         <h1>🎤 Vocal Analyzer Pro</h1>
         <div class="subtitle">Sur (सुर), Pitch & Dynamic Riyaz Engine</div>
     </div>
 
-    <!-- RIYAZ BAR: ROOT KEY (सा) & TANPURA -->
     <div class="riyaz-bar">
         <div class="scale-selector">
-            <span>Root (सा):</span>
+            <span>सा:</span>
             <select class="scale-select" id="rootSelect" onchange="changeRootKey(this.value)">
+                <option value="0">C (सफेद 1)</option>
                 <option value="1" selected>C# (काली 1 - Male Std)</option>
                 <option value="2">D (सफेद 2)</option>
                 <option value="3">D# (काली 2)</option>
@@ -662,15 +623,18 @@
                 <option value="9">A (सफेद 6)</option>
                 <option value="10">A# (काली 5)</option>
                 <option value="11">B (सफेद 7)</option>
-                <option value="0">C (सफेद 1)</option>
             </select>
         </div>
-        <button class="tanpura-btn" id="tanpuraBtn" onclick="toggleTanpura()">
-            <span>🪕</span> Tanpura Drone
-        </button>
+        <div class="riyaz-actions">
+            <button class="pill-btn cal-btn" id="calBtn" onclick="startCalibration()">
+                <span>🎚️</span> Cal
+            </button>
+            <button class="pill-btn" id="tanpuraBtn" onclick="toggleTanpura()">
+                <span>🪕</span> Drone
+            </button>
+        </div>
     </div>
 
-    <!-- VISUALIZER WRAPPER WITH TABS -->
     <div class="viz-box">
         <div class="viz-controls">
             <button class="viz-pill active" onclick="setVizMode('waveform', this)">〰️ Waveform</button>
@@ -682,7 +646,6 @@
         </div>
     </div>
 
-    <!-- MIC BUTTON -->
     <div class="mic-section">
         <button class="mic-btn" id="micBtn" onclick="toggleRecording()">
             <span id="micIcon">🎤</span>
@@ -690,12 +653,12 @@
         <div class="mic-label" id="micLabel">TAP TO START RIYAZ</div>
     </div>
 
-    <!-- REAL-TIME PITCH & SWARA CARD -->
     <div class="pitch-card">
         <div class="pitch-top">
             <div class="swara-badge">
                 <div class="swara-hindi" id="swaraHindi">—</div>
                 <div class="swara-name" id="swaraName">Sing to detect Sur</div>
+                <div class="saptak-badge" id="saptakBadge" style="display:none;">मध्य</div>
             </div>
             <div class="pitch-details">
                 <div class="pitch-hz" id="pitchHz">0.0 Hz</div>
@@ -703,7 +666,6 @@
             </div>
         </div>
 
-        <!-- Tuner Needle Gauge -->
         <div>
             <div class="tuner-gauge-track">
                 <div class="tuner-zone-flat"></div>
@@ -719,7 +681,6 @@
         </div>
     </div>
 
-    <!-- dB METER CARD -->
     <div class="db-card">
         <div class="db-val-wrap">
             <span class="db-value" id="dbValue">0</span>
@@ -738,34 +699,37 @@
         </div>
     </div>
 
-    <!-- PRACTICE MODES -->
     <div>
         <div class="section-title" style="margin-bottom:6px;">🎵 Practice Mode</div>
         <div class="practice-modes">
-            <div class="mode-card active-mode" data-min="40" data-max="65" data-name="Normal Singing" onclick="selectMode(this)">
+            <div class="mode-card active-mode" data-min="72" data-max="88" data-name="Normal Singing" onclick="selectMode(this)">
                 <div class="mode-icon">🎶</div>
                 <div class="mode-name">Normal Singing</div>
-                <div class="mode-range">40–65 dB</div>
+                <div class="mode-range">72–88 dB</div>
             </div>
-            <div class="mode-card" data-min="35" data-max="55" data-name="Sa Re Ga Ma" onclick="selectMode(this)">
+            <div class="mode-card" data-min="68" data-max="82" data-name="Sa Re Ga Ma" onclick="selectMode(this)">
                 <div class="mode-icon">🎹</div>
                 <div class="mode-name">Sa Re Ga Ma</div>
-                <div class="mode-range">35–55 dB</div>
+                <div class="mode-range">68–82 dB</div>
             </div>
-            <div class="mode-card" data-min="30" data-max="50" data-name="Soft / Humming" onclick="selectMode(this)">
+            <div class="mode-card" data-min="52" data-max="70" data-name="Soft / Humming" onclick="selectMode(this)">
                 <div class="mode-icon">🤫</div>
                 <div class="mode-name">Soft / Humming</div>
-                <div class="mode-range">30–50 dB</div>
+                <div class="mode-range">52–70 dB</div>
             </div>
-            <div class="mode-card" data-min="55" data-max="82" data-name="Alaap / Power" onclick="selectMode(this)">
+            <div class="mode-card" data-min="82" data-max="96" data-name="Alaap / Power" onclick="selectMode(this)">
                 <div class="mode-icon">🔊</div>
                 <div class="mode-name">Alaap / Power</div>
-                <div class="mode-range">55–82 dB</div>
+                <div class="mode-range">82–96 dB</div>
+            </div>
+            <div class="mode-card" data-min="76" data-max="84" data-name="Even Dynamics" onclick="selectMode(this)">
+                <div class="mode-icon">🎯</div>
+                <div class="mode-name">Even Dynamics</div>
+                <div class="mode-range">76–84 dB (flat)</div>
             </div>
         </div>
     </div>
 
-    <!-- REAL-TIME STATS -->
     <div class="stats-grid">
         <div class="stat-card">
             <div class="stat-icon">📈</div>
@@ -789,7 +753,6 @@
         </div>
     </div>
 
-    <!-- VOCAL SCORE CARD -->
     <div class="score-card">
         <div class="score-ring">
             <svg viewBox="0 0 60 60">
@@ -805,7 +768,6 @@
         </div>
     </div>
 
-    <!-- SESSION HISTORY WITH INDEXED-DB AUDIO -->
     <div class="history-section">
         <div class="history-header">
             <div class="section-title">📋 Session History</div>
@@ -845,6 +807,7 @@
         { hi: 'नि', en: 'Ni', name: 'Shuddha Nishad (शुद्ध नि)' }
     ];
 
+    // Reference root frequencies at octave 3 (C3=130.81 … B3=246.94)
     const ROOT_FREQS = [130.81, 138.59, 146.83, 155.56, 164.81, 174.61, 185.00, 196.00, 207.65, 220.00, 233.08, 246.94];
 
     // ─── STATE ───
@@ -856,13 +819,17 @@
     let startTime = 0;
 
     let vizMode = 'waveform';
-    let rootKeyIndex = 1; // C# (काली 1)
-    let currentMode = { min: 40, max: 65, name: 'Normal Singing' };
+    let rootKeyIndex = 1;
+    let currentMode = { min: 72, max: 88, name: 'Normal Singing' };
 
     let dbHistory = [];
+    let dbSum = 0;
     let inSurFrames = 0;
     let totalVoicedFrames = 0;
     let peakDb = 0;
+
+    // Calibration offset (default = raw dBFS + 100)
+    let dbOffset = parseFloat(localStorage.getItem('vocalProDbOffset')) || 100;
 
     let mediaRecorder = null;
     let recordedChunks = [];
@@ -870,6 +837,11 @@
 
     let isTanpuraOn = false;
     let tanpuraNodes = null;
+
+    let isCalibrating = false;
+
+    // URL tracking for object URLs to prevent leaks
+    let activeObjectUrls = [];
 
     // ─── DOM REFS ───
     const micBtn = document.getElementById('micBtn');
@@ -883,6 +855,7 @@
 
     const swaraHindi = document.getElementById('swaraHindi');
     const swaraName = document.getElementById('swaraName');
+    const saptakBadge = document.getElementById('saptakBadge');
     const pitchHz = document.getElementById('pitchHz');
     const pitchSurState = document.getElementById('pitchSurState');
     const tunerNeedle = document.getElementById('tunerNeedle');
@@ -899,45 +872,120 @@
     const scoreTips = document.getElementById('scoreTips');
     const historyList = document.getElementById('historyList');
     const tanpuraBtn = document.getElementById('tanpuraBtn');
+    const calBtn = document.getElementById('calBtn');
 
     // ─── INDEXED-DB SETUP ───
     function initDB() {
         return new Promise((resolve) => {
-            const req = indexedDB.open('VocalProRecordingsDB', 1);
-            req.onupgradeneeded = (e) => {
-                const db = e.target.result;
-                if (!db.objectStoreNames.contains('sessions')) {
-                    db.createObjectStore('sessions', { keyPath: 'id', autoIncrement: true });
-                }
-            };
-            req.onsuccess = (e) => {
-                dbInstance = e.target.result;
-                loadHistoryFromDB();
-                resolve();
-            };
-            req.onerror = () => resolve();
+            try {
+                const req = indexedDB.open('VocalProRecordingsDB', 1);
+                req.onupgradeneeded = (e) => {
+                    const db = e.target.result;
+                    if (!db.objectStoreNames.contains('sessions')) {
+                        db.createObjectStore('sessions', { keyPath: 'id', autoIncrement: true });
+                    }
+                };
+                req.onsuccess = (e) => {
+                    dbInstance = e.target.result;
+                    loadHistoryFromDB();
+                    resolve();
+                };
+                req.onerror = () => resolve();
+            } catch (e) { resolve(); }
         });
     }
 
     initDB();
     resizeCanvas();
     window.addEventListener('resize', resizeCanvas);
+    updateMeterZones();
+
+    document.addEventListener('visibilitychange', () => {
+        if (!document.hidden && audioCtx && audioCtx.state === 'suspended') {
+            audioCtx.resume();
+        }
+    });
 
     function resizeCanvas() {
+        const dpr = window.devicePixelRatio || 2;
         const wrap = vizCanvas.parentElement;
-        vizCanvas.width = wrap.clientWidth * (window.devicePixelRatio || 2);
-        vizCanvas.height = wrap.clientHeight * (window.devicePixelRatio || 2);
-        canvasCtx.scale(window.devicePixelRatio || 2, window.devicePixelRatio || 2);
+        const w = wrap.clientWidth || 300;
+        const h = wrap.clientHeight || 85;
+        vizCanvas.width = w * dpr;
+        vizCanvas.height = h * dpr;
+        canvasCtx.setTransform(1, 0, 0, 1, 0, 0);
+        canvasCtx.scale(dpr, dpr);
     }
 
     function ensureAudioContext() {
         if (!audioCtx) {
             audioCtx = new (window.AudioContext || window.webkitAudioContext)();
         }
-        if (audioCtx.state === 'suspended') {
-            audioCtx.resume();
-        }
+        if (audioCtx.state === 'suspended') audioCtx.resume();
     }
+
+    // ─── CALIBRATION ───
+    window.startCalibration = async function() {
+        if (isRecording) { showToast('⏹️ Stop recording first'); return; }
+        if (isCalibrating) return;
+
+        let calStream, calSrc, calAnalyser;
+        try {
+            calStream = await navigator.mediaDevices.getUserMedia({
+                audio: { echoCancellation: false, noiseSuppression: false, autoGainControl: false }
+            });
+            ensureAudioContext();
+
+            calAnalyser = audioCtx.createAnalyser();
+            calAnalyser.fftSize = 2048;
+            calSrc = audioCtx.createMediaStreamSource(calStream);
+            calSrc.connect(calAnalyser);
+
+            const buf = new Float32Array(calAnalyser.fftSize);
+            const samples = [];
+            const startT = Date.now();
+
+            isCalibrating = true;
+            calBtn.classList.add('calibrating');
+            showToast('🎚️ Sing "Aaah" steady for 3 seconds…');
+
+            const tick = () => {
+                if (!isCalibrating) return;
+                calAnalyser.getFloatTimeDomainData(buf);
+                let sum = 0;
+                for (let i = 0; i < buf.length; i++) sum += buf[i] * buf[i];
+                const rms = Math.sqrt(sum / buf.length);
+                if (rms > 0.015) samples.push(rms);
+
+                if (Date.now() - startT < 3000) {
+                    requestAnimationFrame(tick);
+                } else {
+                    // finish
+                    isCalibrating = false;
+                    calBtn.classList.remove('calibrating');
+                    calStream.getTracks().forEach(t => t.stop());
+                    try { calSrc.disconnect(); } catch (e) {}
+
+                    if (samples.length < 20) {
+                        showToast('❌ Not enough voice detected. Try louder.');
+                        return;
+                    }
+                    samples.sort((a, b) => a - b);
+                    const median = samples[Math.floor(samples.length / 2)];
+                    // Target: comfortable singing = 80 dB (centre of Normal Singing)
+                    const newOffset = 80 - 20 * Math.log10(median);
+                    dbOffset = Math.round(newOffset * 10) / 10;
+                    localStorage.setItem('vocalProDbOffset', String(dbOffset));
+                    showToast(`✅ Calibrated! Offset: ${dbOffset.toFixed(1)} dB`);
+                }
+            };
+            tick();
+        } catch (e) {
+            isCalibrating = false;
+            calBtn.classList.remove('calibrating');
+            showToast('❌ Mic permission denied');
+        }
+    };
 
     // ─── RECORDING CONTROLS ───
     window.toggleRecording = async function() {
@@ -947,6 +995,7 @@
                     audio: { echoCancellation: false, noiseSuppression: false, autoGainControl: false }
                 });
                 startEngine();
+                showToast('🎧 Headphones recommended for accurate pitch detection');
             } catch (err) {
                 showToast('❌ Microphone permission denied');
             }
@@ -970,18 +1019,22 @@
         isRecording = true;
         startTime = Date.now();
         dbHistory = [];
+        dbSum = 0;
         inSurFrames = 0;
         totalVoicedFrames = 0;
         peakDb = 0;
 
         recordedChunks = [];
         try {
-            const mime = MediaRecorder.isTypeSupported('audio/webm') ? 'audio/webm' : 'audio/mp4';
-            mediaRecorder = new MediaRecorder(micStream, { mimeType: mime });
+            const mime = MediaRecorder.isTypeSupported('audio/webm') ? 'audio/webm'
+                       : MediaRecorder.isTypeSupported('audio/mp4') ? 'audio/mp4'
+                       : '';
+            mediaRecorder = mime ? new MediaRecorder(micStream, { mimeType: mime }) : new MediaRecorder(micStream);
             mediaRecorder.ondataavailable = e => { if (e.data.size > 0) recordedChunks.push(e.data); };
             mediaRecorder.start();
         } catch (e) {
             console.warn('MediaRecorder init failed', e);
+            mediaRecorder = null;
         }
 
         micBtn.classList.add('recording');
@@ -994,7 +1047,7 @@
 
     function stopEngine() {
         isRecording = false;
-        cancelAnimationFrame(animFrame);
+        if (animFrame) cancelAnimationFrame(animFrame);
 
         if (mediaRecorder && mediaRecorder.state !== 'inactive') {
             mediaRecorder.onstop = saveCompletedSession;
@@ -1003,7 +1056,7 @@
             saveCompletedSession();
         }
 
-        if (source) { source.disconnect(); source = null; }
+        if (source) { try { source.disconnect(); } catch (e) {} source = null; }
         if (micStream) {
             micStream.getTracks().forEach(track => track.stop());
             micStream = null;
@@ -1016,6 +1069,7 @@
 
         swaraHindi.textContent = '—';
         swaraName.textContent = 'Sing to detect Sur';
+        saptakBadge.style.display = 'none';
         pitchHz.textContent = '0.0 Hz';
         pitchSurState.textContent = 'READY';
         tunerNeedle.style.left = '50%';
@@ -1032,42 +1086,41 @@
         analyser.getFloatTimeDomainData(floatBuffer);
         analyser.getByteFrequencyData(freqArray);
 
-        // 1. RMS & dB
+        // 1. RMS & dB (calibrated)
         let sumSquares = 0;
-        for (let i = 0; i < floatBuffer.length; i++) {
-            sumSquares += floatBuffer[i] * floatBuffer[i];
-        }
+        for (let i = 0; i < floatBuffer.length; i++) sumSquares += floatBuffer[i] * floatBuffer[i];
         const rms = Math.sqrt(sumSquares / floatBuffer.length);
-        let db = 20 * Math.log10(rms + 0.0001);
-        db = Math.max(0, Math.min(100, Math.round(db + 100)));
+        let db = 20 * Math.log10(rms + 0.0001) + dbOffset;
+        db = Math.max(0, Math.min(100, Math.round(db)));
 
-        dbHistory.push(db);
-        if (db > peakDb) peakDb = db;
+        const isVoiced = rms > 0.015;
+
+        // Only count voiced frames (fixes avg being dragged down by silence)
+        if (isVoiced) {
+            dbHistory.push(db);
+            dbSum += db;
+            if (db > peakDb) peakDb = db;
+        }
+
         dbValueEl.textContent = db;
 
         let color, statusText;
-        if (db < currentMode.min) {
-            color = 'var(--amber)'; statusText = 'VOLUME LOW';
-        } else if (db <= currentMode.max) {
-            color = 'var(--green)'; statusText = '✦ BALANCED ✦';
-        } else {
-            color = 'var(--red)'; statusText = 'TOO LOUD';
-        }
+        if (db < currentMode.min) { color = 'var(--amber)'; statusText = 'VOLUME LOW'; }
+        else if (db <= currentMode.max) { color = 'var(--green)'; statusText = '✦ BALANCED ✦'; }
+        else { color = 'var(--red)'; statusText = 'TOO LOUD'; }
+
         dbValueEl.style.color = color;
         dbStatusEl.style.color = color;
         dbStatusEl.textContent = statusText;
-
-        meterFill.style.width = db + '%';
+        meterFill.style.width = Math.min(100, db) + '%';
         meterFill.style.background = color;
 
-        // 2. Pitch Detection
+        // 2. Pitch detection
         const pitch = detectFundamentalPitch(floatBuffer, audioCtx.sampleRate, rms);
-        if (pitch > 0) {
-            handlePitchIdentified(pitch);
-        }
+        if (pitch > 0) handlePitchIdentified(pitch);
 
-        // 3. Stats & Score
-        const avg = dbHistory.length ? Math.round(dbHistory.reduce((a, b) => a + b, 0) / dbHistory.length) : 0;
+        // 3. Stats
+        const avg = dbHistory.length ? Math.round(dbSum / dbHistory.length) : 0;
         statMax.textContent = Math.round(peakDb);
         statAvg.textContent = avg;
 
@@ -1077,6 +1130,7 @@
         const elapsed = Date.now() - startTime;
         statTime.textContent = formatTime(elapsed);
 
+        // 4. Score
         const dbMid = (currentMode.min + currentMode.max) / 2;
         const dbDeviation = Math.abs(avg - dbMid);
         const dbScore = Math.max(0, 100 - (dbDeviation * 2.2));
@@ -1091,34 +1145,53 @@
         renderVisualization(db);
     }
 
+    // ─── FIXED PITCH DETECTOR (first-peak + parabolic interpolation) ───
     function detectFundamentalPitch(buffer, sampleRate, rms) {
         if (rms < 0.015) return -1;
 
-        const minPeriod = Math.floor(sampleRate / 1100);
-        const maxPeriod = Math.floor(sampleRate / 65);
+        const n = buffer.length;
+        // Narrow vocal range: 75–800 Hz → fewer iterations
+        const minPeriod = Math.max(2, Math.floor(sampleRate / 800));
+        const maxPeriod = Math.min(Math.floor(sampleRate / 75), Math.floor(n / 2));
+        const threshold = rms * rms * 0.3;
 
-        let bestPeriod = -1;
-        let bestCorrelation = -1;
-
+        // Compute autocorrelation array
+        const corrs = new Float32Array(maxPeriod + 2);
         for (let period = minPeriod; period <= maxPeriod; period++) {
-            let corr = 0;
-            let count = 0;
-            for (let i = 0; i < buffer.length - period; i += 2) {
+            let corr = 0, count = 0;
+            const limit = n - period;
+            for (let i = 0; i < limit; i += 2) {
                 corr += buffer[i] * buffer[i + period];
                 count++;
             }
-            corr = corr / count;
+            corrs[period] = corr / count;
+        }
 
-            if (corr > bestCorrelation) {
-                bestCorrelation = corr;
-                bestPeriod = period;
+        // Skip until threshold, then find first local maximum
+        let i = minPeriod + 1;
+        while (i < maxPeriod && corrs[i] < threshold) i++;
+
+        let bestPeriod = -1;
+        while (i < maxPeriod) {
+            if (corrs[i] > corrs[i - 1] && corrs[i] >= corrs[i + 1]) {
+                bestPeriod = i;
+                break;
             }
+            i++;
         }
 
-        if (bestPeriod > 0 && bestCorrelation > (rms * rms) * 0.35) {
-            return sampleRate / bestPeriod;
-        }
-        return -1;
+        if (bestPeriod < 0) return -1;
+
+        // Parabolic interpolation for sub-sample precision
+        const y0 = corrs[bestPeriod - 1] || 0;
+        const y1 = corrs[bestPeriod];
+        const y2 = corrs[bestPeriod + 1] || 0;
+        const a = (y0 + y2 - 2 * y1) / 2;
+        const b = (y2 - y0) / 2;
+        const shift = a !== 0 ? -b / (2 * a) : 0;
+        const refinedPeriod = bestPeriod + Math.max(-0.5, Math.min(0.5, shift));
+
+        return sampleRate / refinedPeriod;
     }
 
     function handlePitchIdentified(freq) {
@@ -1128,16 +1201,25 @@
         const noteNum = 12 * (Math.log(freq / 440) / Math.log(2)) + 69;
         const midi = Math.round(noteNum);
         const cents = Math.round((noteNum - midi) * 100);
-        const noteIndex = (midi % 12 + 12) % 12;
+        const noteIndex = ((midi % 12) + 12) % 12;
         const octave = Math.floor(midi / 12) - 1;
 
         const semitoneDiff = (noteIndex - rootKeyIndex + 12) % 12;
         const swara = SWARA_TABLE[semitoneDiff];
 
+        // Saptak classification (mandra / madhya / taar)
+        const rootFreq = ROOT_FREQS[rootKeyIndex];
+        const ratio = freq / rootFreq;
+        let saptak = 'मध्य';
+        if (ratio < 0.72) saptak = 'मंद्र';
+        else if (ratio > 1.42) saptak = 'तार';
+
         swaraHindi.textContent = swara.hi;
         swaraName.textContent = `${swara.name} (${NOTE_NAMES[noteIndex]}${octave})`;
+        saptakBadge.textContent = saptak;
+        saptakBadge.style.display = 'inline-block';
 
-        const needlePos = Math.max(0, Math.min(100, (cents + 50)));
+        const needlePos = Math.max(0, Math.min(100, cents + 50));
         tunerNeedle.style.left = needlePos + '%';
 
         if (Math.abs(cents) <= 12) {
@@ -1167,26 +1249,23 @@
     };
 
     function renderVisualization(db) {
-        const w = vizCanvas.width / (window.devicePixelRatio || 2);
-        const h = vizCanvas.height / (window.devicePixelRatio || 2);
+        const dpr = window.devicePixelRatio || 2;
+        const w = vizCanvas.width / dpr;
+        const h = vizCanvas.height / dpr;
         canvasCtx.clearRect(0, 0, w, h);
 
-        if (vizMode === 'waveform') {
-            drawWaveform(w, h, db);
-        } else if (vizMode === 'spectrum') {
-            drawSpectrum(w, h, db);
-        } else if (vizMode === 'circular') {
-            drawCircular(w, h, db);
-        }
+        if (vizMode === 'waveform') drawWaveform(w, h, db);
+        else if (vizMode === 'spectrum') drawSpectrum(w, h, db);
+        else if (vizMode === 'circular') drawCircular(w, h, db);
     }
 
     function drawWaveform(w, h, db) {
+        if (!floatBuffer) return;
         const sliceWidth = w / floatBuffer.length;
         let x = 0;
         canvasCtx.lineWidth = 2.5;
-        canvasCtx.strokeStyle = db >= currentMode.min && db <= currentMode.max ? '#00e676' : '#6c5ce7';
+        canvasCtx.strokeStyle = (db >= currentMode.min && db <= currentMode.max) ? '#00e676' : '#6c5ce7';
         canvasCtx.beginPath();
-
         for (let i = 0; i < floatBuffer.length; i++) {
             const v = floatBuffer[i];
             const y = (0.5 + v * 0.75) * h;
@@ -1198,11 +1277,11 @@
     }
 
     function drawSpectrum(w, h, db) {
+        if (!freqArray) return;
         const barCount = 48;
         const barWidth = (w / barCount) - 2;
         let x = 0;
         const step = Math.floor(freqArray.length / barCount);
-
         for (let i = 0; i < barCount; i++) {
             const val = freqArray[i * step];
             const barH = (val / 255) * h * 0.9;
@@ -1214,21 +1293,19 @@
     }
 
     function drawCircular(w, h, db) {
+        if (!freqArray) return;
         const cx = w / 2;
         const cy = h / 2;
         const radius = Math.min(cx, cy) * 0.55;
         const bars = 48;
-
         for (let i = 0; i < bars; i++) {
             const angle = (i / bars) * Math.PI * 2;
             const val = freqArray[Math.floor(i * freqArray.length / bars)] || 0;
             const barLen = (val / 255) * radius * 0.8 + 2;
-
             const x1 = cx + Math.cos(angle) * radius;
             const y1 = cy + Math.sin(angle) * radius;
             const x2 = cx + Math.cos(angle) * (radius + barLen);
             const y2 = cy + Math.sin(angle) * (radius + barLen);
-
             canvasCtx.beginPath();
             canvasCtx.moveTo(x1, y1);
             canvasCtx.lineTo(x2, y2);
@@ -1239,24 +1316,21 @@
     }
 
     function clearCanvas() {
-        const w = vizCanvas.width / (window.devicePixelRatio || 2);
-        const h = vizCanvas.height / (window.devicePixelRatio || 2);
-        canvasCtx.clearRect(0, 0, w, h);
+        const dpr = window.devicePixelRatio || 2;
+        canvasCtx.clearRect(0, 0, vizCanvas.width / dpr, vizCanvas.height / dpr);
     }
 
-    // ─── ACOUSTIC TANPURA DRONE SYNTH ───
+    // ─── TANPURA DRONE ───
     window.toggleTanpura = function() {
         ensureAudioContext();
-        if (isTanpuraOn) {
-            stopTanpura();
-        } else {
-            startTanpura();
-        }
+        if (isTanpuraOn) stopTanpura();
+        else startTanpura();
     };
 
     function startTanpura() {
         const rootFreq = ROOT_FREQS[rootKeyIndex];
         const paFreq = rootFreq * 1.4983;
+
         const masterGain = audioCtx.createGain();
         masterGain.gain.setValueAtTime(0.08, audioCtx.currentTime);
 
@@ -1280,13 +1354,13 @@
         tanpuraNodes = { oscs, masterGain };
         isTanpuraOn = true;
         tanpuraBtn.classList.add('active');
-        showToast('🪕 Tanpura Drone started on ' + NOTE_NAMES[rootKeyIndex]);
+        showToast('🪕 Tanpura Drone on ' + NOTE_NAMES[rootKeyIndex]);
     }
 
     function stopTanpura() {
         if (tanpuraNodes) {
-            tanpuraNodes.oscs.forEach(o => o.stop());
-            tanpuraNodes.masterGain.disconnect();
+            tanpuraNodes.oscs.forEach(o => { try { o.stop(); } catch (e) {} });
+            try { tanpuraNodes.masterGain.disconnect(); } catch (e) {}
             tanpuraNodes = null;
         }
         isTanpuraOn = false;
@@ -1294,15 +1368,12 @@
     }
 
     window.changeRootKey = function(val) {
-        rootKeyIndex = parseInt(val);
-        if (isTanpuraOn) {
-            stopTanpura();
-            startTanpura();
-        }
-        showToast(`🎵 Root Key set to: ${NOTE_NAMES[rootKeyIndex]} (सा)`);
+        rootKeyIndex = parseInt(val, 10);
+        if (isTanpuraOn) { stopTanpura(); startTanpura(); }
+        showToast(`🎵 Root Key: ${NOTE_NAMES[rootKeyIndex]} (सा)`);
     };
 
-    // ─── RIYAZ FEEDBACK GUIDANCE ───
+    // ─── FEEDBACK ───
     function updateScoreGuidance(score, surAcc, avgDb) {
         if (score >= 80) {
             scoreTitle.textContent = '🌟 Shandaar (शानदार)!';
@@ -1310,7 +1381,7 @@
             scoreTips.innerHTML = '<span class="score-tip">🎯 Sur Stabilized</span><span class="score-tip">✅ Riyaz Ready</span>';
         } else if (score >= 55) {
             scoreTitle.textContent = '👍 Achha Riyaz (अच्छा प्रयास)';
-            scoreDesc.textContent = 'Good control! Minor pitch fluctuation detected—focus on breath support.';
+            scoreDesc.textContent = 'Good control! Focus on breath support and holding notes steady.';
             scoreTips.innerHTML = surAcc < 60
                 ? '<span class="score-tip">🫁 Hold Notes Longer</span><span class="score-tip">👂 Listen to Tanpura</span>'
                 : '<span class="score-tip">🎤 Maintain Mic Distance</span>';
@@ -1321,14 +1392,14 @@
         }
     }
 
-    // ─── SESSIONS STORAGE (INDEXED-DB) ───
+    // ─── SESSIONS STORAGE ───
     function saveCompletedSession() {
         if (dbHistory.length < 10) return;
 
-        const avgDb = Math.round(dbHistory.reduce((a, b) => a + b, 0) / dbHistory.length);
+        const avgDb = Math.round(dbSum / dbHistory.length);
         const surAcc = totalVoicedFrames > 5 ? Math.round((inSurFrames / totalVoicedFrames) * 100) : 0;
         const elapsed = Date.now() - startTime;
-        const finalScore = parseInt(scoreValue.textContent) || 0;
+        const finalScore = parseInt(scoreValue.textContent, 10) || 0;
 
         let audioBlob = null;
         if (recordedChunks.length > 0) {
@@ -1357,6 +1428,11 @@
         }
     }
 
+    function revokeAllObjectUrls() {
+        activeObjectUrls.forEach(u => { try { URL.revokeObjectURL(u); } catch (e) {} });
+        activeObjectUrls = [];
+    }
+
     function loadHistoryFromDB() {
         if (!dbInstance) return;
         const tx = dbInstance.transaction('sessions', 'readonly');
@@ -1368,13 +1444,23 @@
     }
 
     function renderHistoryUI(sessions) {
+        revokeAllObjectUrls();
+
         if (!sessions || sessions.length === 0) {
             historyList.innerHTML = `<div style="text-align:center;color:var(--text-muted);font-size:13px;padding:12px;">No sessions saved yet.</div>`;
             return;
         }
 
         historyList.innerHTML = sessions.map(s => {
-            const audioUrl = s.audioBlob ? URL.createObjectURL(s.audioBlob) : null;
+            let audioUrl = null;
+            let ext = 'webm';
+            if (s.audioBlob) {
+                audioUrl = URL.createObjectURL(s.audioBlob);
+                activeObjectUrls.push(audioUrl);
+                const type = (s.audioBlob.type || '').toLowerCase();
+                if (type.includes('mp4') || type.includes('m4a')) ext = 'm4a';
+                else if (type.includes('ogg')) ext = 'ogg';
+            }
             return `
                 <div class="history-item">
                     <div class="hi-top">
@@ -1387,7 +1473,7 @@
                     ${audioUrl ? `
                         <div class="hi-audio-row">
                             <audio class="history-player" controls src="${audioUrl}"></audio>
-                            <a class="download-btn" href="${audioUrl}" download="vocal-riyaz-${s.time}.webm">⬇️</a>
+                            <a class="download-btn" href="${audioUrl}" download="vocal-riyaz-${s.time.replace(':', '-')}.${ext}">⬇️</a>
                         </div>
                     ` : ''}
                 </div>
@@ -1397,6 +1483,7 @@
 
     window.clearAllHistory = function() {
         if (!dbInstance) return;
+        revokeAllObjectUrls();
         const tx = dbInstance.transaction('sessions', 'readwrite');
         tx.objectStore('sessions').clear();
         tx.oncomplete = () => {
@@ -1405,16 +1492,28 @@
         };
     };
 
+    // ─── MODE SELECTION (with dynamic meter zones) ───
     window.selectMode = function(card) {
         document.querySelectorAll('.mode-card').forEach(c => c.classList.remove('active-mode'));
         card.classList.add('active-mode');
         currentMode = {
-            min: parseInt(card.dataset.min),
-            max: parseInt(card.dataset.max),
+            min: parseInt(card.dataset.min, 10),
+            max: parseInt(card.dataset.max, 10),
             name: card.dataset.name
         };
+        updateMeterZones();
         showToast(`Mode: ${currentMode.name} (${currentMode.min}–${currentMode.max} dB)`);
     };
+
+    function updateMeterZones() {
+        const lowEl = document.querySelector('.meter-zone.low');
+        const goodEl = document.querySelector('.meter-zone.good');
+        const highEl = document.querySelector('.meter-zone.high');
+        if (!lowEl || !goodEl || !highEl) return;
+        lowEl.style.flex = String(currentMode.min);
+        goodEl.style.flex = String(currentMode.max - currentMode.min);
+        highEl.style.flex = String(Math.max(1, 100 - currentMode.max));
+    }
 
     function formatTime(ms) {
         const s = Math.floor(ms / 1000);
@@ -1426,7 +1525,8 @@
         const toast = document.getElementById('toast');
         toast.textContent = msg;
         toast.classList.add('show');
-        setTimeout(() => toast.classList.remove('show'), 2400);
+        clearTimeout(toast._t);
+        toast._t = setTimeout(() => toast.classList.remove('show'), 2600);
     }
 
 })();
